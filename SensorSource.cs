@@ -114,6 +114,19 @@ namespace LibreHardwareMonitorAfterburnerPlugin
                 if (enabledSensors.Contains(sensor.SensorType))
                     _sensors.Add(sensor);
             }));
+
+            // Find duplicated names
+            var duplicates = _sensors
+                .GroupBy(sensor => sensor.Name)
+                .Where(group => group.Count() > 1);
+
+            // Append index number to each duplicated name (#2,#3,...)
+            foreach (var group in duplicates.Select(g => g.Skip(1)))
+            {
+                int index = 2;
+                foreach (var sensor in group)
+                    sensor.Name += $" #{index++}";
+            }
         }
 
         public int SensorCount => _sensors.Count;
