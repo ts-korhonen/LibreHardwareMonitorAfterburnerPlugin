@@ -170,6 +170,8 @@ namespace LibreHardwareMonitorAfterburnerPlugin
             desc.fltMinLimit = 0f;
 
             desc.fltMaxLimit = GetSensorMaxLimit(sensor.SensorType);
+
+            desc.szFormat = GetSensorFormat(sensor.SensorType);
         }
 
         private static string GetSensorUnit(SensorType type)
@@ -180,6 +182,7 @@ namespace LibreHardwareMonitorAfterburnerPlugin
                 case SensorType.Clock: return "MHz";
                 case SensorType.Temperature: return "°C";
                 case SensorType.Load: return "%";
+                case SensorType.Frequency: return "Hz";
                 case SensorType.Fan: return "RPM";
                 case SensorType.Flow: return "L/h";
                 case SensorType.Control: return "%";
@@ -234,6 +237,20 @@ namespace LibreHardwareMonitorAfterburnerPlugin
                 case SensorType.SmallData: return 1000f;
                 case SensorType.Throughput: return 1000f;
                 default: return 100f;
+            }
+        }
+
+        private static string GetSensorFormat(SensorType type)
+        {
+            switch (type)
+            {
+                case SensorType.Voltage:
+                case SensorType.Factor:
+                    return "%.3f";
+                case SensorType.Fan:
+                    return "%.0f";
+                default:
+                    return "%.1f";
             }
         }
     }
