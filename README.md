@@ -6,8 +6,8 @@ You can use it to get motherboard temperatures, fan speeds, etc. that are not bu
 
 ## Requirements
 
-* MSI Afterburner (version 4.6.3 used in development)
-* .Net Framefork >= 4.5.2
+* MSI Afterburner (version 4.6.4 used in development)
+* .Net Framefork >= 4.8
 
 ## Installing
 
