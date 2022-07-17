@@ -31,6 +31,8 @@ namespace LibreHardwareMonitorAfterburnerPlugin
 
         public SensorSource()
         {
+            InitializeGroups();
+
             _computer.Open();
 
             Initialize();
@@ -42,12 +44,14 @@ namespace LibreHardwareMonitorAfterburnerPlugin
 
             _lastUpdate.Clear();
 
+            InitializeGroups();
+
             _computer.Reset();
 
             Initialize();
         }
 
-        private void Initialize()
+        private void InitializeGroups()
         {
             // Hardware group filtering
 
@@ -65,6 +69,13 @@ namespace LibreHardwareMonitorAfterburnerPlugin
 
             _computer.IsNetworkEnabled = Properties.Settings.Default.NetworkEnabled;
 
+            _computer.IsBatteryEnabled = Properties.Settings.Default.BatteryEnabled;
+
+            _computer.IsPsuEnabled = Properties.Settings.Default.PsuEnabled;
+        }
+
+        private void Initialize()
+        {
             // Sensortype filtering
 
             HashSet<SensorType> enabledSensors = new HashSet<SensorType>();
@@ -101,6 +112,10 @@ namespace LibreHardwareMonitorAfterburnerPlugin
                 enabledSensors.Add(SensorType.Data);
                 enabledSensors.Add(SensorType.SmallData);
                 enabledSensors.Add(SensorType.Throughput);
+
+                enabledSensors.Add(SensorType.Current);
+                enabledSensors.Add(SensorType.Energy);
+                enabledSensors.Add(SensorType.Frequency);
             }
 
             // Update all found hardware to create sensors
@@ -179,6 +194,8 @@ namespace LibreHardwareMonitorAfterburnerPlugin
             switch (type)
             {
                 case SensorType.Voltage: return "V";
+                case SensorType.Current: return "A";
+                case SensorType.Power: return "W";
                 case SensorType.Clock: return "MHz";
                 case SensorType.Temperature: return "°C";
                 case SensorType.Load: return "%";
@@ -188,10 +205,10 @@ namespace LibreHardwareMonitorAfterburnerPlugin
                 case SensorType.Control: return "%";
                 case SensorType.Level: return "%";
                 case SensorType.Factor: return "1";
-                case SensorType.Power: return "W";
                 case SensorType.Data: return "GB";
                 case SensorType.SmallData: return "MB";
                 case SensorType.Throughput: return "MB/s";
+                case SensorType.Energy: return "mWh";
                 default: return "";
             }
         }
@@ -205,13 +222,14 @@ namespace LibreHardwareMonitorAfterburnerPlugin
                     return 0x000000F2; //MONITORING_SOURCE_ID_PLUGIN_MOBO
                 case HardwareType.Cpu:
                     return 0x000000F1; //MONITORING_SOURCE_ID_PLUGIN_CPU
-                case HardwareType.GpuAmd:
+                case HardwareType.Memory:
+                    return 0x000000F3; //MONITORING_SOURCE_ID_PLUGIN_RAM
                 case HardwareType.GpuNvidia:
+                case HardwareType.GpuAmd:
+                case HardwareType.GpuIntel:
                     return 0x000000F0; //MONITORING_SOURCE_ID_PLUGIN_GPU
                 case HardwareType.Storage:
                     return 0x000000F4; //MONITORING_SOURCE_ID_PLUGIN_HDD
-                case HardwareType.Memory:
-                    return 0x000000F3; //MONITORING_SOURCE_ID_PLUGIN_RAM
                 case HardwareType.Network:
                     return 0x000000F5; //MONITORING_SOURCE_ID_PLUGIN_NET
                 default:
@@ -223,16 +241,17 @@ namespace LibreHardwareMonitorAfterburnerPlugin
         {
             switch (type)
             {
-                case SensorType.Clock: return 6000f;
                 case SensorType.Voltage: return 5f;
+                case SensorType.Power: return 1000f;
+                case SensorType.Clock: return 6000f;
                 case SensorType.Temperature: return 100f;
                 case SensorType.Load: return 100f;
+                case SensorType.Frequency: return 1000f;
                 case SensorType.Fan: return 3000f;
                 case SensorType.Flow: return 1500f;
                 case SensorType.Control: return 100f;
                 case SensorType.Level: return 100f;
                 case SensorType.Factor: return 10f;
-                case SensorType.Power: return 1000f;
                 case SensorType.Data: return 1000f;
                 case SensorType.SmallData: return 1000f;
                 case SensorType.Throughput: return 1000f;
@@ -247,7 +266,10 @@ namespace LibreHardwareMonitorAfterburnerPlugin
                 case SensorType.Voltage:
                 case SensorType.Factor:
                     return "%.3f";
+                case SensorType.Frequency:
                 case SensorType.Fan:
+                case SensorType.Control:
+                case SensorType.Energy:
                     return "%.0f";
                 default:
                     return "%.1f";

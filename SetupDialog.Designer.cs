@@ -57,6 +57,8 @@ namespace LibreHardwareMonitorAfterburnerPlugin
             this.label1 = new System.Windows.Forms.Label();
             this.about = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.battery = new System.Windows.Forms.CheckBox();
+            this.psu = new System.Windows.Forms.CheckBox();
             this.sensorGroupSelections.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.sensorFilters.SuspendLayout();
@@ -109,6 +111,8 @@ namespace LibreHardwareMonitorAfterburnerPlugin
             this.flowLayoutPanel3.Controls.Add(this.fancontroller);
             this.flowLayoutPanel3.Controls.Add(this.hdd);
             this.flowLayoutPanel3.Controls.Add(this.network);
+            this.flowLayoutPanel3.Controls.Add(this.battery);
+            this.flowLayoutPanel3.Controls.Add(this.psu);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 16);
@@ -417,6 +421,30 @@ namespace LibreHardwareMonitorAfterburnerPlugin
             this.panel1.Size = new System.Drawing.Size(597, 26);
             this.panel1.TabIndex = 7;
             // 
+            // battery
+            // 
+            this.battery.AutoSize = true;
+            this.battery.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.BatteryEnabled;
+            this.battery.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "BatteryEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.battery.Location = new System.Drawing.Point(3, 164);
+            this.battery.Name = "battery";
+            this.battery.Size = new System.Drawing.Size(59, 17);
+            this.battery.TabIndex = 7;
+            this.battery.Text = "Battery";
+            this.battery.UseVisualStyleBackColor = true;
+            // 
+            // psu
+            // 
+            this.psu.AutoSize = true;
+            this.psu.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.PsuEnabled;
+            this.psu.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "PsuEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.psu.Location = new System.Drawing.Point(3, 187);
+            this.psu.Name = "psu";
+            this.psu.Size = new System.Drawing.Size(48, 17);
+            this.psu.TabIndex = 8;
+            this.psu.Text = "PSU";
+            this.psu.UseVisualStyleBackColor = true;
+            // 
             // SetupDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -473,5 +501,7 @@ namespace LibreHardwareMonitorAfterburnerPlugin
         private System.Windows.Forms.CheckBox factor;
         private System.Windows.Forms.Button about;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.CheckBox battery;
+        private System.Windows.Forms.CheckBox psu;
     }
 }
