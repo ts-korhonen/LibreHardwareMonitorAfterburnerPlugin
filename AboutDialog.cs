@@ -1,39 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace LibreHardwareMonitorAfterburnerPlugin
+namespace LibreHardwareMonitorAfterburnerPlugin;
+
+public partial class AboutDialog : Form
 {
-    public partial class AboutDialog : Form
+    public AboutDialog()
     {
-        public AboutDialog()
-        {
-            InitializeComponent();           
+        InitializeComponent();
 
-            info.Text = info.Text.Replace("{{ver}}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
-        }
+        using var iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "icon.ico");
 
-        private void License_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start("https://mozilla.org/MPL/2.0/");
-        }
+        var icon = new Icon(iconStream);
 
-        private void ProjectLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start("https://github.com/ts-korhonen/LibreHardwareMonitorAfterburnerPlugin");
-        }
+        this.Icon = icon;
 
-        private void LibraryLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start("https://github.com/LibreHardwareMonitor/LibreHardwareMonitor");
-        }
+        this.pictureBox1.Image = new Icon(icon, new Size(48, 48)).ToBitmap();
+
+        info.Text = info.Text.Replace(
+            "{{ver}}",
+            Assembly.GetExecutingAssembly()
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                .InformationalVersion
+                .Split('+')[0]
+        );
     }
+
+    private void License_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start("https://mozilla.org/MPL/2.0/");
+
+    private void ProjectLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start("https://github.com/ts-korhonen/LibreHardwareMonitorAfterburnerPlugin");
+
+    private void LibraryLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => Process.Start("https://github.com/LibreHardwareMonitor/LibreHardwareMonitor");
 }

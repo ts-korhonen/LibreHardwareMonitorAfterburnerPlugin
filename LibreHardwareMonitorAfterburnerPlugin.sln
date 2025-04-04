@@ -1,9 +1,8 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.2.32630.192
+VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibreHardwareMonitorAfterburnerPlugin", "LibreHardwareMonitorAfterburnerPlugin.csproj", "{82AE6E42-1003-43C0-B340-6FFAB361EEDB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibreHardwareMonitorAfterburnerPlugin", "LibreHardwareMonitorAfterburnerPlugin.csproj", "{72C9F8B5-DE08-8349-FE7A-6750AAF189B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +10,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{82AE6E42-1003-43C0-B340-6FFAB361EEDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{82AE6E42-1003-43C0-B340-6FFAB361EEDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{82AE6E42-1003-43C0-B340-6FFAB361EEDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{82AE6E42-1003-43C0-B340-6FFAB361EEDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72C9F8B5-DE08-8349-FE7A-6750AAF189B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72C9F8B5-DE08-8349-FE7A-6750AAF189B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72C9F8B5-DE08-8349-FE7A-6750AAF189B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72C9F8B5-DE08-8349-FE7A-6750AAF189B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {0383081B-B172-4F2C-B28B-83D482964907}
+		SolutionGuid = {6BDDF280-7C5D-4587-9AC1-F65CEBC39929}
 	EndGlobalSection
 EndGlobal

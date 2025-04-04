@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Reflection;
 
-namespace LibreHardwareMonitorAfterburnerPlugin
+namespace LibreHardwareMonitorAfterburnerPlugin;
+
+public partial class SetupDialog : Form
 {
-    public partial class SetupDialog : Form
+    public SetupDialog(HardwareFlags hardwareFlags, SensorFlags sensorFlags)
     {
-        public SetupDialog()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
 
-        private void About_Click(object sender, EventArgs e)
-        {
-            new AboutDialog().ShowDialog();
-        }
+        using var iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "icon.ico");
+
+        this.Icon = new Icon(iconStream);
+
+        hardwareFlagsSource.DataSource = hardwareFlags;
+
+        sensorFlagsSource.DataSource = sensorFlags;
     }
+
+    private void About_Click(object sender, EventArgs e) => new AboutDialog().ShowDialog();
 }

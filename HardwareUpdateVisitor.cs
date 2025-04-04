@@ -3,31 +3,22 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 using LibreHardwareMonitor.Hardware;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace LibreHardwareMonitorAfterburnerPlugin
+namespace LibreHardwareMonitorAfterburnerPlugin;
+
+class HardwareUpdateVisitor : IVisitor
 {
-    class HardwareUpdateVisitor : IVisitor
+    public void VisitComputer(IComputer computer) => computer.Traverse(this);
+
+    public void VisitHardware(IHardware hardware)
     {
-        public void VisitComputer(IComputer computer)
-        {
-            computer.Traverse(this);
-        }
+        hardware.Update();
 
-        public void VisitHardware(IHardware hardware)
-        {
-            hardware.Update();
-
-            foreach (var sub in hardware.SubHardware)
-                sub.Accept(this);
-        }
-
-        public void VisitParameter(IParameter parameter) { }
-
-        public void VisitSensor(ISensor sensor) { }
+        foreach (var sub in hardware.SubHardware)
+            sub.Accept(this);
     }
+
+    public void VisitParameter(IParameter parameter) { }
+
+    public void VisitSensor(ISensor sensor) { }
 }

@@ -1,0 +1,31 @@
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask
+    TaskName="CompressFile"
+    TaskFactory="RoslynCodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <DependencyFiles ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <CompressedFiles ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.IO.Compression" />
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+    var compressedFiles = new List<ITaskItem>();
+    foreach (var file in DependencyFiles)
+    {
+        var outputFilePath = Path.Combine(Path.GetTempPath(), "MSBuildTemp", Path.GetFileName(file.ItemSpec));
+        Directory.CreateDirectory(Path.GetDirectoryName(outputFilePath));
+        using var inputFile = File.OpenRead(file.ItemSpec);
+        using var outputFile = File.Create(outputFilePath);
+        using var deflateStream = new DeflateStream(outputFile, CompressionLevel.Optimal);
+        inputFile.CopyTo(deflateStream);
+        compressedFiles.Add(new TaskItem(outputFilePath));
+    }
+    CompressedFiles = compressedFiles.ToArray();
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+</Project>

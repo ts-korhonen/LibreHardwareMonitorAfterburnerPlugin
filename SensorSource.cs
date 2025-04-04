@@ -3,277 +3,250 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 using LibreHardwareMonitor.Hardware;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
 
-namespace LibreHardwareMonitorAfterburnerPlugin
+namespace LibreHardwareMonitorAfterburnerPlugin;
+
+internal class SensorSource
 {
-    internal class SensorSource
+    /// <summary>
+    /// The access point to LibreHardwareMonitorLib
+    /// </summary>
+    private readonly Computer _computer = new();
+    
+    /// <summary>
+    /// References all used sensors
+    /// </summary>
+    private readonly List<ISensor> _sensors = [];
+
+    /// <summary>
+    /// Keeps record of hardware update times
+    /// </summary>
+    private readonly Dictionary<IHardware, int> _lastUpdate = [];
+
+    public SensorSource(Settings settings)
     {
-        /// <summary>
-        /// The access point to LibreHardwareMonitorLib
-        /// </summary>
-        private readonly Computer _computer = new Computer();
-        
-        /// <summary>
-        /// References all used sensors
-        /// </summary>
-        private readonly List<ISensor> _sensors = new List<ISensor>();
+        InitializeGroups(settings.HardwareFlags);
 
-        /// <summary>
-        /// Keeps record of hardware update times
-        /// </summary>
-        private readonly Dictionary<IHardware, int> _lastUpdate = new Dictionary<IHardware, int>();
+        _computer.Open();
 
-        public SensorSource()
+        Initialize(settings.SensorFlags);
+    }
+
+    public void Reload(Settings settings)
+    {
+        _sensors.Clear();
+
+        _lastUpdate.Clear();
+
+        InitializeGroups(settings.HardwareFlags);
+
+        _computer.Reset();
+
+        Initialize(settings.SensorFlags);
+    }
+
+    private void InitializeGroups(HardwareFlags hwFlags)
+    {
+        // Hardware group filtering
+
+        _computer.IsMotherboardEnabled = hwFlags.MainboardEnabled;
+
+        _computer.IsCpuEnabled = hwFlags.CpuEnabled;
+
+        _computer.IsMemoryEnabled = hwFlags.RamEnabled;
+
+        _computer.IsGpuEnabled = hwFlags.GpuEnabled;
+
+        _computer.IsControllerEnabled = hwFlags.FanControllerEnabled;
+
+        _computer.IsStorageEnabled = hwFlags.HddEnabled;
+
+        _computer.IsNetworkEnabled = hwFlags.NetworkEnabled;
+
+        _computer.IsBatteryEnabled = hwFlags.BatteryEnabled;
+
+        _computer.IsPsuEnabled = hwFlags.PsuEnabled;
+    }
+
+    private void Initialize(SensorFlags sensorFlags)
+    {
+        // Sensor type filtering
+
+        HashSet<SensorType> enabledSensors = [];
+
+        if (sensorFlags.TemperatureEnabled)
+            enabledSensors.Add(SensorType.Temperature);
+
+        if (sensorFlags.FanSpeedEnabled)
+            enabledSensors.Add(SensorType.Fan);
+
+        if (sensorFlags.ControlEnabled)
+            enabledSensors.Add(SensorType.Control);
+
+        if (sensorFlags.ClockEnabled)
+            enabledSensors.Add(SensorType.Clock);
+
+        if (sensorFlags.FactorEnabled)
+            enabledSensors.Add(SensorType.Factor);
+
+        if (sensorFlags.VoltageEnabled)
+            enabledSensors.Add(SensorType.Voltage);
+
+        if (sensorFlags.PowerEnabled)
+            enabledSensors.Add(SensorType.Power);
+
+        if (sensorFlags.LoadEnabled)
+            enabledSensors.Add(SensorType.Load);
+
+        if (sensorFlags.FlowEnabled)
+            enabledSensors.Add(SensorType.Flow);
+
+        if (sensorFlags.MiscEnabled)
         {
-            InitializeGroups();
+            enabledSensors.Add(SensorType.Level);
+            enabledSensors.Add(SensorType.Data);
+            enabledSensors.Add(SensorType.SmallData);
+            enabledSensors.Add(SensorType.Throughput);
 
-            _computer.Open();
-
-            Initialize();
+            enabledSensors.Add(SensorType.Current);
+            enabledSensors.Add(SensorType.Energy);
+            enabledSensors.Add(SensorType.Frequency);
         }
 
-        public void Reload()
+        // Update all found hardware to create sensors
+        _computer.Accept(new HardwareUpdateVisitor());
+
+        // Collect found sensors to a list to be referenced by index.
+        // While index is used in the plugin interface, Afterburner uses
+        // the name to distinguish sources and store their settings.
+        _computer.Accept(new SensorVisitor(sensor =>
         {
-            _sensors.Clear();
+            if (enabledSensors.Contains(sensor.SensorType))
+                _sensors.Add(sensor);
+        }));
 
-            _lastUpdate.Clear();
+        // Find duplicated names
+        var duplicates = _sensors
+            .GroupBy(sensor => sensor.Name)
+            .Where(group => group.Count() > 1);
 
-            InitializeGroups();
-
-            _computer.Reset();
-
-            Initialize();
-        }
-
-        private void InitializeGroups()
+        // Append index number to each duplicated name (#2,#3,...)
+        foreach (var group in duplicates.Select(g => g.Skip(1)))
         {
-            // Hardware group filtering
-
-            _computer.IsMotherboardEnabled = Properties.Settings.Default.MainboardEnabled;
-
-            _computer.IsCpuEnabled = Properties.Settings.Default.CpuEnabled;
-
-            _computer.IsMemoryEnabled = Properties.Settings.Default.RamEnabled;
-
-            _computer.IsGpuEnabled = Properties.Settings.Default.GpuEnabled;
-
-            _computer.IsControllerEnabled = Properties.Settings.Default.FanControllerEnabled;
-
-            _computer.IsStorageEnabled = Properties.Settings.Default.HddEnabled;
-
-            _computer.IsNetworkEnabled = Properties.Settings.Default.NetworkEnabled;
-
-            _computer.IsBatteryEnabled = Properties.Settings.Default.BatteryEnabled;
-
-            _computer.IsPsuEnabled = Properties.Settings.Default.PsuEnabled;
-        }
-
-        private void Initialize()
-        {
-            // Sensortype filtering
-
-            HashSet<SensorType> enabledSensors = new HashSet<SensorType>();
-            if (Properties.Settings.Default.TemperatureEnabled)
-                enabledSensors.Add(SensorType.Temperature);
-
-            if (Properties.Settings.Default.FanSpeedEnabled)
-                enabledSensors.Add(SensorType.Fan);
-
-            if (Properties.Settings.Default.ControlEnabled)
-                enabledSensors.Add(SensorType.Control);
-
-            if (Properties.Settings.Default.ClockEnabled)
-                enabledSensors.Add(SensorType.Clock);
-
-            if (Properties.Settings.Default.FactorEnabled)
-                enabledSensors.Add(SensorType.Factor);
-
-            if (Properties.Settings.Default.VoltageEnabled)
-                enabledSensors.Add(SensorType.Voltage);
-
-            if (Properties.Settings.Default.PowerEnabled)
-                enabledSensors.Add(SensorType.Power);
-
-            if (Properties.Settings.Default.LoadEnabled)
-                enabledSensors.Add(SensorType.Load);
-
-            if (Properties.Settings.Default.FlowEnabled)
-                enabledSensors.Add(SensorType.Flow);
-
-            if (Properties.Settings.Default.MiscEnabled)
-            {
-                enabledSensors.Add(SensorType.Level);
-                enabledSensors.Add(SensorType.Data);
-                enabledSensors.Add(SensorType.SmallData);
-                enabledSensors.Add(SensorType.Throughput);
-
-                enabledSensors.Add(SensorType.Current);
-                enabledSensors.Add(SensorType.Energy);
-                enabledSensors.Add(SensorType.Frequency);
-            }
-
-            // Update all found hardware to create sensors
-            _computer.Accept(new HardwareUpdateVisitor());
-
-            // Collect found sensors to a list to be referenced by index.
-            // While index is used in the plugin interface, Afterburner uses
-            // the name to distinguish sources and store their settings.
-            _computer.Accept(new SensorVisitor(sensor =>
-            {
-                if (enabledSensors.Contains(sensor.SensorType))
-                    _sensors.Add(sensor);
-            }));
-
-            // Find duplicated names
-            var duplicates = _sensors
-                .GroupBy(sensor => sensor.Name)
-                .Where(group => group.Count() > 1);
-
-            // Append index number to each duplicated name (#2,#3,...)
-            foreach (var group in duplicates.Select(g => g.Skip(1)))
-            {
-                int index = 2;
-                foreach (var sensor in group)
-                    sensor.Name += $" #{index++}";
-            }
-        }
-
-        public int SensorCount => _sensors.Count;
-
-        public float SensorValue(int index)
-        {
-            var sensor = _sensors.ElementAtOrDefault(index);
-
-            if (sensor == null)
-                return 0f;
-
-            // Update sensors hardware if last update was over 100ms ago.
-            // This most likely results in one update per hardware in a polling cycle as long as polling interval is greater.
-            if (!_lastUpdate.TryGetValue(sensor.Hardware, out int last) || (Environment.TickCount - last) > 100)
-            {
-                sensor.Hardware.Update();
-
-                _lastUpdate[sensor.Hardware] = Environment.TickCount;
-            }
-
-            return sensor.Value ?? 0f;
-        }
-
-        public void FillDescription(int index, ref MonitoringSourceDesc desc)
-        {
-            var sensor = _sensors.ElementAtOrDefault(index);
-
-            if (sensor == null)
-                return;
-
-            desc.szName = sensor.Name;
-
-            desc.szUnits = GetSensorUnit(sensor.SensorType);
-
-            desc.szGroup = "LibreHardwareMonitor";
-
-            desc.dwID = GetSensorPluginID(sensor.Hardware.HardwareType);
-
-            desc.dwInstance = 0;
-
-            desc.fltMinLimit = 0f;
-
-            desc.fltMaxLimit = GetSensorMaxLimit(sensor.SensorType);
-
-            desc.szFormat = GetSensorFormat(sensor.SensorType);
-        }
-
-        private static string GetSensorUnit(SensorType type)
-        {
-            switch (type)
-            {
-                case SensorType.Voltage: return "V";
-                case SensorType.Current: return "A";
-                case SensorType.Power: return "W";
-                case SensorType.Clock: return "MHz";
-                case SensorType.Temperature: return "°C";
-                case SensorType.Load: return "%";
-                case SensorType.Frequency: return "Hz";
-                case SensorType.Fan: return "RPM";
-                case SensorType.Flow: return "L/h";
-                case SensorType.Control: return "%";
-                case SensorType.Level: return "%";
-                case SensorType.Factor: return "1";
-                case SensorType.Data: return "GB";
-                case SensorType.SmallData: return "MB";
-                case SensorType.Throughput: return "MB/s";
-                case SensorType.Energy: return "mWh";
-                default: return "";
-            }
-        }
-
-        private static uint GetSensorPluginID(HardwareType type)
-        {
-            switch (type)
-            {
-                case HardwareType.Motherboard:
-                case HardwareType.SuperIO:
-                    return 0x000000F2; //MONITORING_SOURCE_ID_PLUGIN_MOBO
-                case HardwareType.Cpu:
-                    return 0x000000F1; //MONITORING_SOURCE_ID_PLUGIN_CPU
-                case HardwareType.Memory:
-                    return 0x000000F3; //MONITORING_SOURCE_ID_PLUGIN_RAM
-                case HardwareType.GpuNvidia:
-                case HardwareType.GpuAmd:
-                case HardwareType.GpuIntel:
-                    return 0x000000F0; //MONITORING_SOURCE_ID_PLUGIN_GPU
-                case HardwareType.Storage:
-                    return 0x000000F4; //MONITORING_SOURCE_ID_PLUGIN_HDD
-                case HardwareType.Network:
-                    return 0x000000F5; //MONITORING_SOURCE_ID_PLUGIN_NET
-                default:
-                    return 0x000000FF; //MONITORING_SOURCE_ID_PLUGIN_MISC
-            }
-        }
-
-        private static float GetSensorMaxLimit(SensorType type)
-        {
-            switch (type)
-            {
-                case SensorType.Voltage: return 5f;
-                case SensorType.Power: return 1000f;
-                case SensorType.Clock: return 6000f;
-                case SensorType.Temperature: return 100f;
-                case SensorType.Load: return 100f;
-                case SensorType.Frequency: return 1000f;
-                case SensorType.Fan: return 3000f;
-                case SensorType.Flow: return 1500f;
-                case SensorType.Control: return 100f;
-                case SensorType.Level: return 100f;
-                case SensorType.Factor: return 10f;
-                case SensorType.Data: return 1000f;
-                case SensorType.SmallData: return 1000f;
-                case SensorType.Throughput: return 1000f;
-                default: return 100f;
-            }
-        }
-
-        private static string GetSensorFormat(SensorType type)
-        {
-            switch (type)
-            {
-                case SensorType.Voltage:
-                case SensorType.Factor:
-                    return "%.3f";
-                case SensorType.Frequency:
-                case SensorType.Fan:
-                case SensorType.Control:
-                case SensorType.Energy:
-                    return "%.0f";
-                default:
-                    return "%.1f";
-            }
+            int index = 2;
+            foreach (var sensor in group)
+                sensor.Name += $" #{index++}";
         }
     }
+
+    public int SensorCount => _sensors.Count;
+
+    public float SensorValue(int index)
+    {
+        var sensor = _sensors.ElementAtOrDefault(index);
+
+        if (sensor == null)
+            return 0f;
+
+        // Update sensors hardware if last update was over 100ms ago.
+        // This most likely results in one update per hardware in a polling cycle as long as polling interval is greater.
+        if (!_lastUpdate.TryGetValue(sensor.Hardware, out int last) || (Environment.TickCount - last) > 100)
+        {
+            sensor.Hardware.Update();
+
+            _lastUpdate[sensor.Hardware] = Environment.TickCount;
+        }
+
+        return sensor.Value ?? 0f;
+    }
+
+    public bool FillDescription(int index, MonitoringSourceDesc desc)
+    {
+        var sensor = _sensors.ElementAtOrDefault(index);
+
+        if (sensor == null)
+            return false;
+
+        desc.szName = sensor.Name;
+
+        desc.szUnits = GetSensorUnit(sensor.SensorType);
+
+        desc.szGroup = "LibreHardwareMonitor";
+
+        desc.dwID = GetSensorPluginID(sensor.Hardware.HardwareType);
+
+        desc.dwInstance = 0;
+
+        desc.fltMinLimit = 0f;
+
+        desc.fltMaxLimit = GetSensorMaxLimit(sensor.SensorType);
+
+        desc.szFormat = GetSensorFormat(sensor.SensorType);
+
+        return true;
+    }
+
+    private static string GetSensorUnit(SensorType type) => type switch
+    {
+        SensorType.Voltage => "V",
+        SensorType.Current => "A",
+        SensorType.Power => "W",
+        SensorType.Clock => "MHz",
+        SensorType.Temperature => "°C",
+        SensorType.Load => "%",
+        SensorType.Frequency => "Hz",
+        SensorType.Fan => "RPM",
+        SensorType.Flow => "L/h",
+        SensorType.Control => "%",
+        SensorType.Level => "%",
+        SensorType.Factor => "1",
+        SensorType.Data => "GB",
+        SensorType.SmallData => "MB",
+        SensorType.Throughput => "MB/s",
+        SensorType.Energy => "mWh",
+        _ => "",
+    };
+
+    private static uint GetSensorPluginID(HardwareType type) => type switch
+    {
+        HardwareType.Motherboard or HardwareType.SuperIO => 0x000000F2,     //MONITORING_SOURCE_ID_PLUGIN_MOBO
+        HardwareType.Cpu => 0x000000F1,     //MONITORING_SOURCE_ID_PLUGIN_CPU
+        HardwareType.Memory => 0x000000F3,     //MONITORING_SOURCE_ID_PLUGIN_RAM
+        HardwareType.GpuNvidia
+            or HardwareType.GpuAmd
+            or HardwareType.GpuIntel => 0x000000F0,     //MONITORING_SOURCE_ID_PLUGIN_GPU
+        HardwareType.Storage => 0x000000F4,     //MONITORING_SOURCE_ID_PLUGIN_HDD
+        HardwareType.Network => 0x000000F5,     //MONITORING_SOURCE_ID_PLUGIN_NET
+        _ => 0x000000FF,     //MONITORING_SOURCE_ID_PLUGIN_MISC
+    };
+
+    private static float GetSensorMaxLimit(SensorType type) => type switch
+    {
+        SensorType.Voltage => 5f,
+        SensorType.Power => 1000f,
+        SensorType.Clock => 6000f,
+        SensorType.Temperature => 100f,
+        SensorType.Load => 100f,
+        SensorType.Frequency => 1000f,
+        SensorType.Fan => 3000f,
+        SensorType.Flow => 1500f,
+        SensorType.Control => 100f,
+        SensorType.Level => 100f,
+        SensorType.Factor => 10f,
+        SensorType.Data => 1000f,
+        SensorType.SmallData => 1000f,
+        SensorType.Throughput => 1000f,
+        _ => 100f,
+    };
+
+    private static string GetSensorFormat(SensorType type) => type switch
+    {
+        SensorType.Voltage
+            or SensorType.Factor => "%.3f",
+        SensorType.Frequency
+            or SensorType.Fan
+            or SensorType.Control
+            or SensorType.Energy => "%.0f",
+        _ => "%.1f",
+    };
 }

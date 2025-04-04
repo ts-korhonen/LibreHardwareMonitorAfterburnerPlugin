@@ -2,139 +2,211 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
+using System.IO.Compression;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace LibreHardwareMonitorAfterburnerPlugin
+namespace LibreHardwareMonitorAfterburnerPlugin;
+
+/// <summary>
+/// Native DLL Exports
+/// Implementing plugin interface according to SDK samples included with MSI Afterburner 4.6.3
+/// </summary>
+public static class Exports
 {
     /// <summary>
-    /// Native DLL Exports
-    /// Implementing plugin interface according to SDK samples included with MSI Afterburner 4.6.3
+    ///     The directory where the plugin dll is located.
     /// </summary>
-    public class Exports
+    private static readonly string plugin_path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+    /// <summary>
+    ///     Settings file location
+    /// </summary>
+    private static readonly string settings_path = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        nameof(LibreHardwareMonitorAfterburnerPlugin),
+#if DEBUG
+        "settings.debug.json");
+#else
+        "settings.json");
+#endif
+
+    private static readonly Settings settings;
+
+    private static readonly Lazy<SensorSource> source;
+
+    /// <summary>
+    ///     Initialize the plugin.
+    /// </summary>
+    /// <remarks>
+    ///     While the exported methods are technically the entry points,
+    ///     static constructor is called before they are entered.
+    /// </remarks>
+    static Exports()
     {
-        private static readonly Lazy<SensorSource> _source = new Lazy<SensorSource>(System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
+        AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolver;
 
-        [DllExport]
-        public static bool SetupSource(uint dwIndex, IntPtr hWnd)
+        settings = Settings.Load(settings_path);
+
+        source = new(() => new SensorSource(settings));
+    }
+
+    /// <summary>
+    ///     This is called to query if sources have settings, and to show setup dialog.
+    /// </summary>
+    /// <remarks>
+    ///     Since we don't have any individual source settings, we only show the plugin settings dialog.
+    /// </remarks>
+    /// <param name="dwIndex">Index of a source</param>
+    /// <param name="hWnd">parent window's handle or NULL</param>
+    /// <returns></returns>
+    [DllExport]
+    public static bool SetupSource(uint dwIndex, IntPtr hWnd) => CatchAndLog(() =>
+    {
+        // The call was just a query
+        if (hWnd == IntPtr.Zero)
+            return dwIndex == 0xFFFFFFFF; // Only true for the plugin setup
+
+        // The call was to show the setup dialog
+
+        // Clone for dialog to preserve original settings
+        var hardwareFlags = settings.HardwareFlags.Clone();
+        var sensorFlags = settings.SensorFlags.Clone();
+
+        var dlg = new SetupDialog(hardwareFlags, sensorFlags);
+
+        if (dlg.ShowDialog() != DialogResult.OK)
+            return false;
+
+        // Replace with modified settings
+        settings.HardwareFlags = hardwareFlags;
+        settings.SensorFlags = sensorFlags;
+
+        settings.Save(settings_path);
+
+        // Reload new settings if SensorSource already exists
+        if (source.IsValueCreated)
+            source.Value.Reload(settings);
+
+        return true;
+    });
+
+    /// <summary>
+    ///     Retrieves the data source count.
+    /// </summary>
+    /// <returns>Source count</returns>
+    [DllExport]
+    public static uint GetSourcesNum() => CatchAndLog(() => (uint)source.Value.SensorCount);
+
+    /// <summary>
+    ///     Get descriptor for a data source.
+    /// </summary>
+    /// <param name="dwIndex">data source index</param>
+    /// <param name="pDesc">filled descriptor</param>
+    /// <returns>if sensor existed at the index</returns>
+    [DllExport]
+    public static bool GetSourceDesc(uint dwIndex, [In, Out] MonitoringSourceDesc pDesc) => CatchAndLog(() => source.Value.FillDescription((int)dwIndex, pDesc));
+
+    /// <summary>
+    ///     Get the value of a data source.
+    /// </summary>
+    /// <param name="dwIndex">data source index</param>
+    /// <returns>sensor value</returns>
+    [DllExport]
+    public static float GetSourceData(uint dwIndex) => CatchAndLog(() => source.Value.SensorValue((int)dwIndex));
+
+    /// <summary>
+    ///     Loads an assembly from the plugin directory or from the embedded resources.
+    /// </summary>
+    /// <remarks>
+    ///     The event is called when assembly is not found. This means that the host process (MSI Afterburner)
+    ///     executable directory has precedence over this. If assembly is found there, it will be loaded, and
+    ///     this event will not fire.
+    ///
+    ///     While the intended flow is to load the embedded resources, this allows to override LibreHardwareMonitor.lib
+    ///     with a custom version by placing it in the same directory as the plugin dll.
+    /// </remarks>
+    /// <param name="obj"></param>
+    /// <param name="args"></param>
+    /// <returns>requested assembly</returns>
+    private static Assembly? AssemblyResolver(object obj, ResolveEventArgs args)
+    {
+        try
         {
-            try
+            var localAssembly = Path.Combine(plugin_path, args.Name.Split(',')[0]) + ".dll";
+
+            if (File.Exists(localAssembly))
             {
-                if (hWnd != IntPtr.Zero)
-                {
-                    var settingsChanged = false;
-
-                    // see if settings are changed during dialog
-                    void changeWatcher(object sender, PropertyChangedEventArgs e) => settingsChanged = true;
-
-                    Properties.Settings.Default.PropertyChanged += changeWatcher;
-
-                    var dlg = new SetupDialog();
-
-                    if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        if (settingsChanged)
-                        {
-                            Properties.Settings.Default.Save();
-
-                            // Reload new settings if SensorSource already exists
-                            if (_source.IsValueCreated)
-                                _source.Value.Reload();
-                        }
-
-                        Properties.Settings.Default.PropertyChanged -= changeWatcher;
-
-                        return true;
-                    }
-
-                    Properties.Settings.Default.PropertyChanged -= changeWatcher;
-
-                    // Setup was cancelled, reload old settings.
-                    Properties.Settings.Default.Reload();
-
-                    return false;
-                }
-
-                // only plugin settings, no individual source settings
-                return dwIndex == 0xFFFFFFFF;
-            }
-            catch (Exception e)
-            {
-                try
-                {
-                    Properties.Settings.Default.Reload();
-
-                    File.AppendAllText(System.Reflection.Assembly.GetExecutingAssembly().Location + ".log", $"{DateTime.Now:s}: {e}\r\n");
-                }
-                catch { }
-
-                return false;
+                // Assembly was found in the plugin directory.
+                return Assembly.LoadFrom(localAssembly);
             }
         }
-
-        [DllExport]
-        public static uint GetSourcesNum()
+        catch (Exception e)
         {
-            try
-            {
-                return (uint)_source.Value.SensorCount;
-            }
-            catch (Exception e)
-            {
-                try
-                {
-                    File.AppendAllText(System.Reflection.Assembly.GetExecutingAssembly().Location + ".log", $"{DateTime.Now:s}: {e}\r\n");
-                }
-                catch { }
-
-                return 0u;
-            }
+            Log(e);
         }
 
-        [DllExport]
-        public static bool GetSourceDesc(uint dwIndex, ref MonitoringSourceDesc pDesc)
+        try
         {
-            try
-            {
-                _source.Value.FillDescription((int)dwIndex, ref pDesc);
+            var resourceName = $"{nameof(LibreHardwareMonitorAfterburnerPlugin)}.{new AssemblyName(args.Name).Name}.dll";
 
-                return true;
-            }
-            catch (Exception e)
-            {
-                try
-                {
-                    File.AppendAllText(System.Reflection.Assembly.GetExecutingAssembly().Location + ".log", $"{DateTime.Now:s}: {e}\r\n");
-                }
-                catch { }
+            using var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
 
-                return false;
+            if (resourceStream is not null)
+            {
+                // Assembly was found in the embedded resources.
+
+                using var assemblyStream = new MemoryStream();
+
+                using var deflateStream = new DeflateStream(resourceStream, CompressionMode.Decompress);
+
+                deflateStream.CopyTo(assemblyStream);
+
+                return Assembly.Load(assemblyStream.ToArray());
             }
         }
-
-        [DllExport]
-        public static float GetSourceData(uint dwIndex)
+        catch (Exception e)
         {
-            try
-            {
-                return _source.Value.SensorValue((int)dwIndex);
-            }
-            catch (Exception e)
-            {
-                try
-                {
-                    File.AppendAllText(System.Reflection.Assembly.GetExecutingAssembly().Location + ".log", $"{DateTime.Now:s}: {e}\r\n");
-                }
-                catch { }
-
-                return 0f;
-            }
+            Log(e);
         }
+
+        Log($"Couldn't resolve `{args.Name}` for `{args.RequestingAssembly}`");
+
+        return null;
+    }
+
+    /// <summary>
+    ///     Wrapper to catch exceptions and log them.
+    /// </summary>
+    /// <typeparam name="TReturn">wrapped method return type</typeparam>
+    /// <param name="proc">wrapped method</param>
+    /// <param name="returnValueOnError">value to return in exception situation</param>
+    /// <returns></returns>
+    private static TReturn CatchAndLog<TReturn>(Func<TReturn> proc, TReturn returnValueOnError = default) where TReturn : struct
+    {
+        try
+        {
+            return proc();
+        }
+        catch(Exception e)
+        {
+            Log(e);
+        }
+
+        return returnValueOnError;
+    }
+
+    /// <summary>
+    ///     Simple file logger.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="message"></param>
+    private static void Log<T>(T message)
+    {
+        try
+        {
+            File.AppendAllText(Assembly.GetExecutingAssembly().Location + ".log", $"{DateTime.UtcNow:s}: {message}{Environment.NewLine}");
+        }
+        catch { /* Ignore; Let's not crash the host process. */ }
     }
 }

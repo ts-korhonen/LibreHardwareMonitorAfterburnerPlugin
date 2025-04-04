@@ -29,104 +29,100 @@ namespace LibreHardwareMonitorAfterburnerPlugin
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutDialog));
-            this.projectLink = new System.Windows.Forms.LinkLabel();
-            this.license = new System.Windows.Forms.LinkLabel();
-            this.info = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.ok = new System.Windows.Forms.Button();
-            this.libraryLink = new System.Windows.Forms.LinkLabel();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.SuspendLayout();
+            projectLink = new LinkLabel();
+            license = new LinkLabel();
+            info = new Label();
+            pictureBox1 = new PictureBox();
+            ok = new Button();
+            libraryLink = new LinkLabel();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            SuspendLayout();
             // 
             // projectLink
             // 
-            this.projectLink.AutoSize = true;
-            this.projectLink.Location = new System.Drawing.Point(82, 109);
-            this.projectLink.Name = "projectLink";
-            this.projectLink.Size = new System.Drawing.Size(110, 13);
-            this.projectLink.TabIndex = 0;
-            this.projectLink.TabStop = true;
-            this.projectLink.Text = "Plugin project website";
-            this.projectLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ProjectLink_LinkClicked);
+            projectLink.AutoSize = true;
+            projectLink.Location = new Point(82, 109);
+            projectLink.Name = "projectLink";
+            projectLink.Size = new Size(110, 13);
+            projectLink.TabIndex = 0;
+            projectLink.TabStop = true;
+            projectLink.Text = "Plugin project website";
+            projectLink.LinkClicked += ProjectLink_LinkClicked;
             // 
             // license
             // 
-            this.license.AutoSize = true;
-            this.license.Location = new System.Drawing.Point(82, 87);
-            this.license.Name = "license";
-            this.license.Size = new System.Drawing.Size(129, 13);
-            this.license.TabIndex = 1;
-            this.license.TabStop = true;
-            this.license.Text = "Mozilla Public License 2.0";
-            this.license.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.License_LinkClicked);
+            license.AutoSize = true;
+            license.Location = new Point(82, 87);
+            license.Name = "license";
+            license.Size = new Size(129, 13);
+            license.TabIndex = 1;
+            license.TabStop = true;
+            license.Text = "Mozilla Public License 2.0";
+            license.LinkClicked += License_LinkClicked;
             // 
             // info
             // 
-            this.info.AutoSize = true;
-            this.info.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.info.Location = new System.Drawing.Point(82, 12);
-            this.info.Name = "info";
-            this.info.Size = new System.Drawing.Size(280, 60);
-            this.info.TabIndex = 2;
-            this.info.Text = "Libre Hardware Monitor Plugin for MSI Afterburner\r\nVersion {{ver}}\r\n\r\n© 2021 Teem" +
-    "u Korhonen";
+            info.AutoSize = true;
+            info.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            info.Location = new Point(82, 12);
+            info.Name = "info";
+            info.Size = new Size(280, 60);
+            info.TabIndex = 2;
+            info.Text = "Libre Hardware Monitor Plugin for MSI Afterburner\r\nVersion {{ver}}\r\n\r\n© Teemu Korhonen";
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(64, 59);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
+            pictureBox1.Location = new Point(12, 12);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(64, 59);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 3;
+            pictureBox1.TabStop = false;
             // 
             // ok
             // 
-            this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.ok.Location = new System.Drawing.Point(346, 127);
-            this.ok.Name = "ok";
-            this.ok.Size = new System.Drawing.Size(75, 23);
-            this.ok.TabIndex = 4;
-            this.ok.Text = "OK";
-            this.ok.UseVisualStyleBackColor = true;
+            ok.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            ok.DialogResult = DialogResult.OK;
+            ok.Location = new Point(346, 127);
+            ok.Name = "ok";
+            ok.Size = new Size(75, 23);
+            ok.TabIndex = 4;
+            ok.Text = "OK";
+            ok.UseVisualStyleBackColor = true;
             // 
             // libraryLink
             // 
-            this.libraryLink.AutoSize = true;
-            this.libraryLink.Location = new System.Drawing.Point(82, 131);
-            this.libraryLink.Name = "libraryLink";
-            this.libraryLink.Size = new System.Drawing.Size(150, 13);
-            this.libraryLink.TabIndex = 5;
-            this.libraryLink.TabStop = true;
-            this.libraryLink.Text = "LibreHardwareMonitor website";
-            this.libraryLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LibraryLink_LinkClicked);
+            libraryLink.AutoSize = true;
+            libraryLink.Location = new Point(82, 131);
+            libraryLink.Name = "libraryLink";
+            libraryLink.Size = new Size(150, 13);
+            libraryLink.TabIndex = 5;
+            libraryLink.TabStop = true;
+            libraryLink.Text = "LibreHardwareMonitor website";
+            libraryLink.LinkClicked += LibraryLink_LinkClicked;
             // 
             // AboutDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(433, 162);
-            this.Controls.Add(this.libraryLink);
-            this.Controls.Add(this.ok);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.info);
-            this.Controls.Add(this.license);
-            this.Controls.Add(this.projectLink);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "AboutDialog";
-            this.ShowIcon = false;
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "About plugin";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(6F, 13F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(433, 162);
+            Controls.Add(libraryLink);
+            Controls.Add(ok);
+            Controls.Add(pictureBox1);
+            Controls.Add(info);
+            Controls.Add(license);
+            Controls.Add(projectLink);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "AboutDialog";
+            ShowIcon = false;
+            SizeGripStyle = SizeGripStyle.Hide;
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "About plugin";
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

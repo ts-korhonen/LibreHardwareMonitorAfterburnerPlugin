@@ -1,159 +1,61 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{82AE6E42-1003-43C0-B340-6FFAB361EEDB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LibreHardwareMonitorAfterburnerPlugin</RootNamespace>
     <AssemblyName>LibreHardwareMonitor</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
+    <AssemblyTitle>Libre Hardware Monitor Afterburner Plugin</AssemblyTitle>
+    <Version>0.0.0-dev</Version>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>13.0</LangVersion>
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWinFormsOutOfProcDesigner>True</UseWinFormsOutOfProcDesigner>
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
-  <PropertyGroup Label="8337224c9ad9e356:PreProc">
-    <DebugType Condition="'$(DebugType)'!='full' And '$(DebugType)'!='pdbonly'" Label="8337224c9ad9e356:PreProc">pdbonly</DebugType>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
   </PropertyGroup>
-  <PropertyGroup>
-    <DllExportIdent>FF2CEFE1-C36E-4971-AEC1-5F85B4361135</DllExportIdent>
-    <DllExportMetaLibName>DllExport.dll</DllExportMetaLibName>
-    <DllExportNamespace>System.Runtime.InteropServices</DllExportNamespace>
-    <DllExportDDNSCecil>true</DllExportDDNSCecil>
-    <PlatformTarget>x86</PlatformTarget>
-    <DllExportOrdinalsBase>1</DllExportOrdinalsBase>
-    <DllExportGenExpLib>false</DllExportGenExpLib>
-    <DllExportOurILAsm>false</DllExportOurILAsm>
-    <DllExportSysObjRebase>false</DllExportSysObjRebase>
-    <DllExportLeaveIntermediateFiles>false</DllExportLeaveIntermediateFiles>
-    <DllExportTimeout>30000</DllExportTimeout>
-    <DllExportPeCheck>2</DllExportPeCheck>
-    <DllExportPatches>2</DllExportPatches>
-    <DllExportPreProcType>25</DllExportPreProcType>
-    <DllExportILMerge>LibreHardwareMonitor.dll LibreHardwareMonitorLib.dll HidSharp.dll</DllExportILMerge>
-    <DllExportPostProcType>0</DllExportPostProcType>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <EmbeddedResource Include="icon.ico" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="AboutDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AboutDialog.Designer.cs">
-      <DependentUpon>AboutDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="HardwareUpdateVisitor.cs" />
-    <Compile Include="MonitoringSourceDesc.cs" />
-    <Compile Include="Exports.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="SensorSource.cs" />
-    <Compile Include="SetupDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SetupDialog.Designer.cs">
-      <DependentUpon>SetupDialog.cs</DependentUpon>
-    </Compile>
+    <PackageReference Include="PolySharp" Version="1.15.0" />
+    <PackageReference Include="DllExport" Version="1.8.0" PrivateAssets="true" />
+    <PackageReference Include="HidSharp" Version="2.1.0" />
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.4" />
+    <PackageReference Include="System.Memory" Version="4.6.2" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="AboutDialog.resx">
-      <DependentUpon>AboutDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SetupDialog.resx">
-      <DependentUpon>SetupDialog.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="DllExport">
-      <Version>1.7.4</Version>
-    </PackageReference>
-    <PackageReference Include="HidSharp">
-      <Version>2.1.0</Version>
-    </PackageReference>
-    <PackageReference Include="ilmerge">
-      <Version>3.0.41</Version>
-    </PackageReference>
-    <PackageReference Include="LibreHardwareMonitorLib">
-      <Version>0.9.4</Version>
-    </PackageReference>
-    <PackageReference Include="System.Management">
-      <Version>9.0.0</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="icon.ico" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="DllExportPreProc" BeforeTargets="DllExportMod" Label="8337224c9ad9e356:PreProc">
-    <Copy SourceFiles="$(DllExportMetaLibFullPath)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
-    <Exec Command="$(ILMergeConsolePath) $(TargetFileName) LibreHardwareMonitorLib.dll HidSharp.dll /out:$(TargetFileName).ilm0.dll" WorkingDirectory="$(TargetDir)" ContinueOnError="true" />
-    <Move SourceFiles="$(TargetDir)$(TargetFileName).ilm0.dll" DestinationFiles="$(TargetDir)$(TargetFileName)" OverwriteReadOnlyFiles="true" ContinueOnError="true" />
-    <Delete Files="$(TargetDir)$(DllExportMetaLibName)" ContinueOnError="true" />
-  </Target>
-  <Target Name="DllExportPreProcAfter" AfterTargets="DllExportMod" Label="8337224c9ad9e356:PreProc">
-    <Delete Files="$(TargetDir)$(TargetFileName).ilm0.pdb" ContinueOnError="true" />
-  </Target>
-  <ImportGroup Label=".NET DllExport">
-    <Import Project="$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets" Condition="Exists($([MSBuild]::Escape('$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets')))" Label="8337224c9ad9e356" />
-  </ImportGroup>
-  <Target Name="DllExportRestorePkg" BeforeTargets="PrepareForBuild">
-    <Error Condition="!Exists('$(SolutionDir)DllExport.bat')" Text="DllExport.bat is not found. Path: '$(SolutionDir)' - https://github.com/3F/DllExport" />
-    <Exec Condition="('$(DllExportModImported)' != 'true' Or !Exists('$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets')) And Exists('$(SolutionDir)DllExport.bat')" Command=".\DllExport.bat  -action Restore" WorkingDirectory="$(SolutionDir)" />
-    <MSBuild Condition="'$(DllExportModImported)' != 'true'" Projects="$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets" Targets="DllExportMetaXBaseTarget" Properties="TargetFramework=$(TargetFramework)">
-      <Output TaskParameter="TargetOutputs" PropertyName="DllExportMetaXBase" />
-    </MSBuild>
+
+  <Import Project="DllExport.targets" />
+
+  <Import Project="compress_deps.targets" />
+  <Target Name="EmbedDependencies" AfterTargets="ResolveReferences">
+    <CompressFile DependencyFiles="@(ReferenceCopyLocalPaths)">
+      <Output TaskParameter="CompressedFiles" ItemName="CompressedFiles" />
+    </CompressFile>
     <ItemGroup>
-      <Reference Include="DllExport, PublicKeyToken=8337224c9ad9e356">
-        <HintPath>$(SolutionDir)packages\DllExport.1.7.4\gcache\$(DllExportMetaXBase)\$(DllExportNamespace)\$(DllExportMetaLibName)</HintPath>
-        <Private>False</Private>
-        <SpecificVersion>False</SpecificVersion>
-      </Reference>
+      <EmbeddedResource Include="@(CompressedFiles)" />
     </ItemGroup>
   </Target>
-  <Target Name="DllExportRPkgDynamicImport" BeforeTargets="PostBuildEvent" DependsOnTargets="GetFrameworkPaths" Condition="'$(DllExportModImported)' != 'true' And '$(DllExportRPkgDyn)' != 'false'">
-    <MSBuild BuildInParallel="true" UseResultsCache="true" Projects="$(MSBuildProjectFullPath)" Properties="DllExportRPkgDyn=true" Targets="Build" />
+
+  <Target Name="CleanDependencies" AfterTargets="AfterBuild">
+    <Delete Files="@(CompressedFiles)" />
+    <Delete Files="@(ReferenceCopyLocalPaths -> '$(TargetDir)%(Filename)%(Extension)')" />
   </Target>
+
 </Project>

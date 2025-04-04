@@ -1,5 +1,4 @@
-﻿
-namespace LibreHardwareMonitorAfterburnerPlugin
+﻿namespace LibreHardwareMonitorAfterburnerPlugin
 {
     partial class SetupDialog
     {
@@ -29,447 +28,425 @@ namespace LibreHardwareMonitorAfterburnerPlugin
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SetupDialog));
-            this.ok = new System.Windows.Forms.Button();
-            this.cancel = new System.Windows.Forms.Button();
-            this.sensorGroupSelections = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.mainboard = new System.Windows.Forms.CheckBox();
-            this.cpu = new System.Windows.Forms.CheckBox();
-            this.ram = new System.Windows.Forms.CheckBox();
-            this.gpu = new System.Windows.Forms.CheckBox();
-            this.fancontroller = new System.Windows.Forms.CheckBox();
-            this.hdd = new System.Windows.Forms.CheckBox();
-            this.network = new System.Windows.Forms.CheckBox();
-            this.sensorFilters = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.temp = new System.Windows.Forms.CheckBox();
-            this.fanRpm = new System.Windows.Forms.CheckBox();
-            this.fanControl = new System.Windows.Forms.CheckBox();
-            this.clock = new System.Windows.Forms.CheckBox();
-            this.factor = new System.Windows.Forms.CheckBox();
-            this.voltage = new System.Windows.Forms.CheckBox();
-            this.power = new System.Windows.Forms.CheckBox();
-            this.load = new System.Windows.Forms.CheckBox();
-            this.flow = new System.Windows.Forms.CheckBox();
-            this.misc = new System.Windows.Forms.CheckBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.about = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.battery = new System.Windows.Forms.CheckBox();
-            this.psu = new System.Windows.Forms.CheckBox();
-            this.sensorGroupSelections.SuspendLayout();
-            this.flowLayoutPanel3.SuspendLayout();
-            this.sensorFilters.SuspendLayout();
-            this.flowLayoutPanel2.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            ok = new Button();
+            cancel = new Button();
+            sensorGroupSelections = new GroupBox();
+            flowLayoutPanel3 = new FlowLayoutPanel();
+            mainboard = new CheckBox();
+            hardwareFlagsSource = new BindingSource(components);
+            cpu = new CheckBox();
+            ram = new CheckBox();
+            gpu = new CheckBox();
+            fancontroller = new CheckBox();
+            hdd = new CheckBox();
+            network = new CheckBox();
+            battery = new CheckBox();
+            psu = new CheckBox();
+            sensorFilters = new GroupBox();
+            flowLayoutPanel2 = new FlowLayoutPanel();
+            temp = new CheckBox();
+            sensorFlagsSource = new BindingSource(components);
+            fanRpm = new CheckBox();
+            fanControl = new CheckBox();
+            clock = new CheckBox();
+            factor = new CheckBox();
+            voltage = new CheckBox();
+            power = new CheckBox();
+            load = new CheckBox();
+            flow = new CheckBox();
+            misc = new CheckBox();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            label1 = new Label();
+            about = new Button();
+            panel1 = new Panel();
+            sensorGroupSelections.SuspendLayout();
+            flowLayoutPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)hardwareFlagsSource).BeginInit();
+            sensorFilters.SuspendLayout();
+            flowLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)sensorFlagsSource).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
+            panel1.SuspendLayout();
+            SuspendLayout();
             // 
             // ok
             // 
-            this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.ok.Location = new System.Drawing.Point(435, 0);
-            this.ok.Name = "ok";
-            this.ok.Size = new System.Drawing.Size(75, 23);
-            this.ok.TabIndex = 1;
-            this.ok.Text = "Save";
-            this.ok.UseVisualStyleBackColor = true;
+            ok.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            ok.DialogResult = DialogResult.OK;
+            ok.Location = new Point(435, 0);
+            ok.Name = "ok";
+            ok.Size = new Size(75, 23);
+            ok.TabIndex = 1;
+            ok.Text = "Save";
+            ok.UseVisualStyleBackColor = true;
             // 
             // cancel
             // 
-            this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancel.Location = new System.Drawing.Point(516, 0);
-            this.cancel.Name = "cancel";
-            this.cancel.Size = new System.Drawing.Size(75, 23);
-            this.cancel.TabIndex = 2;
-            this.cancel.Text = "Cancel";
-            this.cancel.UseVisualStyleBackColor = true;
+            cancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            cancel.DialogResult = DialogResult.Cancel;
+            cancel.Location = new Point(516, 0);
+            cancel.Name = "cancel";
+            cancel.Size = new Size(75, 23);
+            cancel.TabIndex = 2;
+            cancel.Text = "Cancel";
+            cancel.UseVisualStyleBackColor = true;
             // 
             // sensorGroupSelections
             // 
-            this.sensorGroupSelections.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.sensorGroupSelections.Controls.Add(this.flowLayoutPanel3);
-            this.sensorGroupSelections.Location = new System.Drawing.Point(3, 57);
-            this.sensorGroupSelections.Name = "sensorGroupSelections";
-            this.sensorGroupSelections.Size = new System.Drawing.Size(292, 293);
-            this.sensorGroupSelections.TabIndex = 4;
-            this.sensorGroupSelections.TabStop = false;
-            this.sensorGroupSelections.Text = "Active hardware groups";
+            sensorGroupSelections.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            sensorGroupSelections.Controls.Add(flowLayoutPanel3);
+            sensorGroupSelections.Location = new Point(3, 57);
+            sensorGroupSelections.Name = "sensorGroupSelections";
+            sensorGroupSelections.Size = new Size(292, 293);
+            sensorGroupSelections.TabIndex = 4;
+            sensorGroupSelections.TabStop = false;
+            sensorGroupSelections.Text = "Active hardware groups";
             // 
             // flowLayoutPanel3
             // 
-            this.flowLayoutPanel3.Controls.Add(this.mainboard);
-            this.flowLayoutPanel3.Controls.Add(this.cpu);
-            this.flowLayoutPanel3.Controls.Add(this.ram);
-            this.flowLayoutPanel3.Controls.Add(this.gpu);
-            this.flowLayoutPanel3.Controls.Add(this.fancontroller);
-            this.flowLayoutPanel3.Controls.Add(this.hdd);
-            this.flowLayoutPanel3.Controls.Add(this.network);
-            this.flowLayoutPanel3.Controls.Add(this.battery);
-            this.flowLayoutPanel3.Controls.Add(this.psu);
-            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 16);
-            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(286, 274);
-            this.flowLayoutPanel3.TabIndex = 7;
+            flowLayoutPanel3.Controls.Add(mainboard);
+            flowLayoutPanel3.Controls.Add(cpu);
+            flowLayoutPanel3.Controls.Add(ram);
+            flowLayoutPanel3.Controls.Add(gpu);
+            flowLayoutPanel3.Controls.Add(fancontroller);
+            flowLayoutPanel3.Controls.Add(hdd);
+            flowLayoutPanel3.Controls.Add(network);
+            flowLayoutPanel3.Controls.Add(battery);
+            flowLayoutPanel3.Controls.Add(psu);
+            flowLayoutPanel3.Dock = DockStyle.Fill;
+            flowLayoutPanel3.FlowDirection = FlowDirection.TopDown;
+            flowLayoutPanel3.Location = new Point(3, 16);
+            flowLayoutPanel3.Name = "flowLayoutPanel3";
+            flowLayoutPanel3.Size = new Size(286, 274);
+            flowLayoutPanel3.TabIndex = 7;
             // 
             // mainboard
             // 
-            this.mainboard.AutoSize = true;
-            this.mainboard.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.MainboardEnabled;
-            this.mainboard.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mainboard.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "MainboardEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.mainboard.Location = new System.Drawing.Point(3, 3);
-            this.mainboard.Name = "mainboard";
-            this.mainboard.Size = new System.Drawing.Size(76, 17);
-            this.mainboard.TabIndex = 0;
-            this.mainboard.Text = "Mainboard";
-            this.mainboard.UseVisualStyleBackColor = true;
+            mainboard.AutoSize = true;
+            mainboard.DataBindings.Add(new Binding("Checked", hardwareFlagsSource, "MainboardEnabled", true));
+            mainboard.Location = new Point(3, 3);
+            mainboard.Name = "mainboard";
+            mainboard.Size = new Size(76, 17);
+            mainboard.TabIndex = 0;
+            mainboard.Text = "Mainboard";
+            mainboard.UseVisualStyleBackColor = true;
+            // 
+            // hardwareFlagsSource
+            // 
+            hardwareFlagsSource.DataSource = typeof(HardwareFlags);
             // 
             // cpu
             // 
-            this.cpu.AutoSize = true;
-            this.cpu.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.CpuEnabled;
-            this.cpu.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "CpuEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cpu.Location = new System.Drawing.Point(3, 26);
-            this.cpu.Name = "cpu";
-            this.cpu.Size = new System.Drawing.Size(78, 17);
-            this.cpu.TabIndex = 1;
-            this.cpu.Text = "Processors";
-            this.cpu.UseVisualStyleBackColor = true;
+            cpu.AutoSize = true;
+            cpu.DataBindings.Add(new Binding("Checked", hardwareFlagsSource, "CpuEnabled", true));
+            cpu.Location = new Point(3, 26);
+            cpu.Name = "cpu";
+            cpu.Size = new Size(78, 17);
+            cpu.TabIndex = 1;
+            cpu.Text = "Processors";
+            cpu.UseVisualStyleBackColor = true;
             // 
             // ram
             // 
-            this.ram.AutoSize = true;
-            this.ram.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.RamEnabled;
-            this.ram.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "RamEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.ram.Location = new System.Drawing.Point(3, 49);
-            this.ram.Name = "ram";
-            this.ram.Size = new System.Drawing.Size(63, 17);
-            this.ram.TabIndex = 2;
-            this.ram.Text = "Memory";
-            this.ram.UseVisualStyleBackColor = true;
+            ram.AutoSize = true;
+            ram.DataBindings.Add(new Binding("Checked", hardwareFlagsSource, "RamEnabled", true));
+            ram.Location = new Point(3, 49);
+            ram.Name = "ram";
+            ram.Size = new Size(63, 17);
+            ram.TabIndex = 2;
+            ram.Text = "Memory";
+            ram.UseVisualStyleBackColor = true;
             // 
             // gpu
             // 
-            this.gpu.AutoSize = true;
-            this.gpu.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.GpuEnabled;
-            this.gpu.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "GpuEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.gpu.Location = new System.Drawing.Point(3, 72);
-            this.gpu.Name = "gpu";
-            this.gpu.Size = new System.Drawing.Size(54, 17);
-            this.gpu.TabIndex = 3;
-            this.gpu.Text = "GPUs";
-            this.gpu.UseVisualStyleBackColor = true;
+            gpu.AutoSize = true;
+            gpu.DataBindings.Add(new Binding("Checked", hardwareFlagsSource, "GpuEnabled", true));
+            gpu.Location = new Point(3, 72);
+            gpu.Name = "gpu";
+            gpu.Size = new Size(54, 17);
+            gpu.TabIndex = 3;
+            gpu.Text = "GPUs";
+            gpu.UseVisualStyleBackColor = true;
             // 
             // fancontroller
             // 
-            this.fancontroller.AutoSize = true;
-            this.fancontroller.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.FanControllerEnabled;
-            this.fancontroller.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "FanControllerEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.fancontroller.Location = new System.Drawing.Point(3, 95);
-            this.fancontroller.Name = "fancontroller";
-            this.fancontroller.Size = new System.Drawing.Size(95, 17);
-            this.fancontroller.TabIndex = 4;
-            this.fancontroller.Text = "Fan controllers";
-            this.fancontroller.UseVisualStyleBackColor = true;
+            fancontroller.AutoSize = true;
+            fancontroller.DataBindings.Add(new Binding("Checked", hardwareFlagsSource, "FanControllerEnabled", true));
+            fancontroller.Location = new Point(3, 95);
+            fancontroller.Name = "fancontroller";
+            fancontroller.Size = new Size(95, 17);
+            fancontroller.TabIndex = 4;
+            fancontroller.Text = "Fan controllers";
+            fancontroller.UseVisualStyleBackColor = true;
             // 
             // hdd
             // 
-            this.hdd.AutoSize = true;
-            this.hdd.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.HddEnabled;
-            this.hdd.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "HddEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.hdd.Location = new System.Drawing.Point(3, 118);
-            this.hdd.Name = "hdd";
-            this.hdd.Size = new System.Drawing.Size(63, 17);
-            this.hdd.TabIndex = 5;
-            this.hdd.Text = "Storage";
-            this.hdd.UseVisualStyleBackColor = true;
+            hdd.AutoSize = true;
+            hdd.DataBindings.Add(new Binding("Checked", hardwareFlagsSource, "HddEnabled", true));
+            hdd.Location = new Point(3, 118);
+            hdd.Name = "hdd";
+            hdd.Size = new Size(63, 17);
+            hdd.TabIndex = 5;
+            hdd.Text = "Storage";
+            hdd.UseVisualStyleBackColor = true;
             // 
             // network
             // 
-            this.network.AutoSize = true;
-            this.network.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.NetworkEnabled;
-            this.network.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "NetworkEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.network.Location = new System.Drawing.Point(3, 141);
-            this.network.Name = "network";
-            this.network.Size = new System.Drawing.Size(66, 17);
-            this.network.TabIndex = 6;
-            this.network.Text = "Network";
-            this.network.UseVisualStyleBackColor = true;
-            // 
-            // sensorFilters
-            // 
-            this.sensorFilters.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.sensorFilters.Controls.Add(this.flowLayoutPanel2);
-            this.sensorFilters.Location = new System.Drawing.Point(301, 57);
-            this.sensorFilters.Name = "sensorFilters";
-            this.sensorFilters.Size = new System.Drawing.Size(293, 293);
-            this.sensorFilters.TabIndex = 5;
-            this.sensorFilters.TabStop = false;
-            this.sensorFilters.Text = "Active sensor types";
-            // 
-            // flowLayoutPanel2
-            // 
-            this.flowLayoutPanel2.Controls.Add(this.temp);
-            this.flowLayoutPanel2.Controls.Add(this.fanRpm);
-            this.flowLayoutPanel2.Controls.Add(this.fanControl);
-            this.flowLayoutPanel2.Controls.Add(this.clock);
-            this.flowLayoutPanel2.Controls.Add(this.factor);
-            this.flowLayoutPanel2.Controls.Add(this.voltage);
-            this.flowLayoutPanel2.Controls.Add(this.power);
-            this.flowLayoutPanel2.Controls.Add(this.load);
-            this.flowLayoutPanel2.Controls.Add(this.flow);
-            this.flowLayoutPanel2.Controls.Add(this.misc);
-            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 16);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(287, 274);
-            this.flowLayoutPanel2.TabIndex = 11;
-            // 
-            // temp
-            // 
-            this.temp.AutoSize = true;
-            this.temp.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.TemperatureEnabled;
-            this.temp.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.temp.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "TemperatureEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.temp.Location = new System.Drawing.Point(3, 3);
-            this.temp.Name = "temp";
-            this.temp.Size = new System.Drawing.Size(106, 17);
-            this.temp.TabIndex = 0;
-            this.temp.Text = "Temperature (°C)";
-            this.temp.UseVisualStyleBackColor = true;
-            // 
-            // fanRpm
-            // 
-            this.fanRpm.AutoSize = true;
-            this.fanRpm.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.FanSpeedEnabled;
-            this.fanRpm.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.fanRpm.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "FanSpeedEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.fanRpm.Location = new System.Drawing.Point(3, 26);
-            this.fanRpm.Name = "fanRpm";
-            this.fanRpm.Size = new System.Drawing.Size(109, 17);
-            this.fanRpm.TabIndex = 4;
-            this.fanRpm.Text = "Fan speed (RPM)";
-            this.fanRpm.UseVisualStyleBackColor = true;
-            // 
-            // fanControl
-            // 
-            this.fanControl.AutoSize = true;
-            this.fanControl.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.ControlEnabled;
-            this.fanControl.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "ControlEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.fanControl.Location = new System.Drawing.Point(3, 49);
-            this.fanControl.Name = "fanControl";
-            this.fanControl.Size = new System.Drawing.Size(93, 17);
-            this.fanControl.TabIndex = 6;
-            this.fanControl.Text = "Fan speed (%)";
-            this.fanControl.UseVisualStyleBackColor = true;
-            // 
-            // clock
-            // 
-            this.clock.AutoSize = true;
-            this.clock.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.ClockEnabled;
-            this.clock.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.clock.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "ClockEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.clock.Location = new System.Drawing.Point(3, 72);
-            this.clock.Name = "clock";
-            this.clock.Size = new System.Drawing.Size(105, 17);
-            this.clock.TabIndex = 1;
-            this.clock.Text = "Frequency (Mhz)";
-            this.clock.UseVisualStyleBackColor = true;
-            // 
-            // factor
-            // 
-            this.factor.AutoSize = true;
-            this.factor.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.FactorEnabled;
-            this.factor.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "FactorEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.factor.Location = new System.Drawing.Point(3, 95);
-            this.factor.Name = "factor";
-            this.factor.Size = new System.Drawing.Size(72, 17);
-            this.factor.TabIndex = 11;
-            this.factor.Text = "Multipliers";
-            this.factor.UseVisualStyleBackColor = true;
-            // 
-            // voltage
-            // 
-            this.voltage.AutoSize = true;
-            this.voltage.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.VoltageEnabled;
-            this.voltage.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.voltage.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "VoltageEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.voltage.Location = new System.Drawing.Point(3, 118);
-            this.voltage.Name = "voltage";
-            this.voltage.Size = new System.Drawing.Size(62, 17);
-            this.voltage.TabIndex = 2;
-            this.voltage.Text = "Voltage";
-            this.voltage.UseVisualStyleBackColor = true;
-            // 
-            // power
-            // 
-            this.power.AutoSize = true;
-            this.power.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.PowerEnabled;
-            this.power.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.power.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "PowerEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.power.Location = new System.Drawing.Point(3, 141);
-            this.power.Name = "power";
-            this.power.Size = new System.Drawing.Size(76, 17);
-            this.power.TabIndex = 9;
-            this.power.Text = "Power (W)";
-            this.power.UseVisualStyleBackColor = true;
-            // 
-            // load
-            // 
-            this.load.AutoSize = true;
-            this.load.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.LoadEnabled;
-            this.load.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.load.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "LoadEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.load.Location = new System.Drawing.Point(3, 164);
-            this.load.Name = "load";
-            this.load.Size = new System.Drawing.Size(67, 17);
-            this.load.TabIndex = 3;
-            this.load.Text = "Load (%)";
-            this.load.UseVisualStyleBackColor = true;
-            // 
-            // flow
-            // 
-            this.flow.AutoSize = true;
-            this.flow.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.FlowEnabled;
-            this.flow.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "FlowEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.flow.Location = new System.Drawing.Point(3, 187);
-            this.flow.Name = "flow";
-            this.flow.Size = new System.Drawing.Size(80, 17);
-            this.flow.TabIndex = 5;
-            this.flow.Text = "Flow speed";
-            this.flow.UseVisualStyleBackColor = true;
-            // 
-            // misc
-            // 
-            this.misc.AutoSize = true;
-            this.misc.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.MiscEnabled;
-            this.misc.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "MiscEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.misc.Location = new System.Drawing.Point(3, 210);
-            this.misc.Name = "misc";
-            this.misc.Size = new System.Drawing.Size(227, 17);
-            this.misc.TabIndex = 10;
-            this.misc.Text = "Misc (data sizes, network and storage info)";
-            this.misc.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.sensorGroupSelections, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.sensorFilters, 1, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(597, 353);
-            this.tableLayoutPanel1.TabIndex = 6;
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.tableLayoutPanel1.SetColumnSpan(this.label1, 2);
-            this.label1.Location = new System.Drawing.Point(3, 3);
-            this.label1.Margin = new System.Windows.Forms.Padding(3, 3, 0, 10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(594, 41);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Select which hardware and sensor types to activate. What sensors are discovered w" +
-    "ill depend on the system hardware and whether it is supported by Libre Hardware " +
-    "Monitor.\r\n\r\n";
-            // 
-            // about
-            // 
-            this.about.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.about.Location = new System.Drawing.Point(6, 0);
-            this.about.Name = "about";
-            this.about.Size = new System.Drawing.Size(75, 23);
-            this.about.TabIndex = 3;
-            this.about.Text = "About...";
-            this.about.UseVisualStyleBackColor = true;
-            this.about.Click += new System.EventHandler(this.About_Click);
-            // 
-            // panel1
-            // 
-            this.panel1.AutoSize = true;
-            this.panel1.Controls.Add(this.about);
-            this.panel1.Controls.Add(this.ok);
-            this.panel1.Controls.Add(this.cancel);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 353);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(597, 26);
-            this.panel1.TabIndex = 7;
+            network.AutoSize = true;
+            network.DataBindings.Add(new Binding("Checked", hardwareFlagsSource, "NetworkEnabled", true));
+            network.Location = new Point(3, 141);
+            network.Name = "network";
+            network.Size = new Size(66, 17);
+            network.TabIndex = 6;
+            network.Text = "Network";
+            network.UseVisualStyleBackColor = true;
             // 
             // battery
             // 
-            this.battery.AutoSize = true;
-            this.battery.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.BatteryEnabled;
-            this.battery.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "BatteryEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.battery.Location = new System.Drawing.Point(3, 164);
-            this.battery.Name = "battery";
-            this.battery.Size = new System.Drawing.Size(59, 17);
-            this.battery.TabIndex = 7;
-            this.battery.Text = "Battery";
-            this.battery.UseVisualStyleBackColor = true;
+            battery.AutoSize = true;
+            battery.DataBindings.Add(new Binding("Checked", hardwareFlagsSource, "BatteryEnabled", true));
+            battery.Location = new Point(3, 164);
+            battery.Name = "battery";
+            battery.Size = new Size(59, 17);
+            battery.TabIndex = 7;
+            battery.Text = "Battery";
+            battery.UseVisualStyleBackColor = true;
             // 
             // psu
             // 
-            this.psu.AutoSize = true;
-            this.psu.Checked = global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default.PsuEnabled;
-            this.psu.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::LibreHardwareMonitorAfterburnerPlugin.Properties.Settings.Default, "PsuEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.psu.Location = new System.Drawing.Point(3, 187);
-            this.psu.Name = "psu";
-            this.psu.Size = new System.Drawing.Size(48, 17);
-            this.psu.TabIndex = 8;
-            this.psu.Text = "PSU";
-            this.psu.UseVisualStyleBackColor = true;
+            psu.AutoSize = true;
+            psu.DataBindings.Add(new Binding("Checked", hardwareFlagsSource, "PsuEnabled", true));
+            psu.Location = new Point(3, 187);
+            psu.Name = "psu";
+            psu.Size = new Size(48, 17);
+            psu.TabIndex = 8;
+            psu.Text = "PSU";
+            psu.UseVisualStyleBackColor = true;
+            // 
+            // sensorFilters
+            // 
+            sensorFilters.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            sensorFilters.Controls.Add(flowLayoutPanel2);
+            sensorFilters.Location = new Point(301, 57);
+            sensorFilters.Name = "sensorFilters";
+            sensorFilters.Size = new Size(293, 293);
+            sensorFilters.TabIndex = 5;
+            sensorFilters.TabStop = false;
+            sensorFilters.Text = "Active sensor types";
+            // 
+            // flowLayoutPanel2
+            // 
+            flowLayoutPanel2.Controls.Add(temp);
+            flowLayoutPanel2.Controls.Add(fanRpm);
+            flowLayoutPanel2.Controls.Add(fanControl);
+            flowLayoutPanel2.Controls.Add(clock);
+            flowLayoutPanel2.Controls.Add(factor);
+            flowLayoutPanel2.Controls.Add(voltage);
+            flowLayoutPanel2.Controls.Add(power);
+            flowLayoutPanel2.Controls.Add(load);
+            flowLayoutPanel2.Controls.Add(flow);
+            flowLayoutPanel2.Controls.Add(misc);
+            flowLayoutPanel2.Dock = DockStyle.Fill;
+            flowLayoutPanel2.FlowDirection = FlowDirection.TopDown;
+            flowLayoutPanel2.Location = new Point(3, 16);
+            flowLayoutPanel2.Name = "flowLayoutPanel2";
+            flowLayoutPanel2.Size = new Size(287, 274);
+            flowLayoutPanel2.TabIndex = 11;
+            // 
+            // temp
+            // 
+            temp.AutoSize = true;
+            temp.DataBindings.Add(new Binding("Checked", sensorFlagsSource, "TemperatureEnabled", true));
+            temp.Location = new Point(3, 3);
+            temp.Name = "temp";
+            temp.Size = new Size(106, 17);
+            temp.TabIndex = 0;
+            temp.Text = "Temperature (°C)";
+            temp.UseVisualStyleBackColor = true;
+            // 
+            // sensorFlagsSource
+            // 
+            sensorFlagsSource.DataSource = typeof(SensorFlags);
+            // 
+            // fanRpm
+            // 
+            fanRpm.AutoSize = true;
+            fanRpm.DataBindings.Add(new Binding("Checked", sensorFlagsSource, "FanSpeedEnabled", true));
+            fanRpm.Location = new Point(3, 26);
+            fanRpm.Name = "fanRpm";
+            fanRpm.Size = new Size(109, 17);
+            fanRpm.TabIndex = 4;
+            fanRpm.Text = "Fan speed (RPM)";
+            fanRpm.UseVisualStyleBackColor = true;
+            // 
+            // fanControl
+            // 
+            fanControl.AutoSize = true;
+            fanControl.DataBindings.Add(new Binding("Checked", sensorFlagsSource, "ControlEnabled", true));
+            fanControl.Location = new Point(3, 49);
+            fanControl.Name = "fanControl";
+            fanControl.Size = new Size(93, 17);
+            fanControl.TabIndex = 6;
+            fanControl.Text = "Fan speed (%)";
+            fanControl.UseVisualStyleBackColor = true;
+            // 
+            // clock
+            // 
+            clock.AutoSize = true;
+            clock.DataBindings.Add(new Binding("Checked", sensorFlagsSource, "ClockEnabled", true));
+            clock.Location = new Point(3, 72);
+            clock.Name = "clock";
+            clock.Size = new Size(105, 17);
+            clock.TabIndex = 1;
+            clock.Text = "Frequency (Mhz)";
+            clock.UseVisualStyleBackColor = true;
+            // 
+            // factor
+            // 
+            factor.AutoSize = true;
+            factor.DataBindings.Add(new Binding("Checked", sensorFlagsSource, "FactorEnabled", true));
+            factor.Location = new Point(3, 95);
+            factor.Name = "factor";
+            factor.Size = new Size(72, 17);
+            factor.TabIndex = 11;
+            factor.Text = "Multipliers";
+            factor.UseVisualStyleBackColor = true;
+            // 
+            // voltage
+            // 
+            voltage.AutoSize = true;
+            voltage.DataBindings.Add(new Binding("Checked", sensorFlagsSource, "VoltageEnabled", true));
+            voltage.Location = new Point(3, 118);
+            voltage.Name = "voltage";
+            voltage.Size = new Size(62, 17);
+            voltage.TabIndex = 2;
+            voltage.Text = "Voltage";
+            voltage.UseVisualStyleBackColor = true;
+            // 
+            // power
+            // 
+            power.AutoSize = true;
+            power.DataBindings.Add(new Binding("Checked", sensorFlagsSource, "PowerEnabled", true));
+            power.Location = new Point(3, 141);
+            power.Name = "power";
+            power.Size = new Size(76, 17);
+            power.TabIndex = 9;
+            power.Text = "Power (W)";
+            power.UseVisualStyleBackColor = true;
+            // 
+            // load
+            // 
+            load.AutoSize = true;
+            load.DataBindings.Add(new Binding("Checked", sensorFlagsSource, "LoadEnabled", true));
+            load.Location = new Point(3, 164);
+            load.Name = "load";
+            load.Size = new Size(67, 17);
+            load.TabIndex = 3;
+            load.Text = "Load (%)";
+            load.UseVisualStyleBackColor = true;
+            // 
+            // flow
+            // 
+            flow.AutoSize = true;
+            flow.DataBindings.Add(new Binding("Checked", sensorFlagsSource, "FlowEnabled", true));
+            flow.Location = new Point(3, 187);
+            flow.Name = "flow";
+            flow.Size = new Size(80, 17);
+            flow.TabIndex = 5;
+            flow.Text = "Flow speed";
+            flow.UseVisualStyleBackColor = true;
+            // 
+            // misc
+            // 
+            misc.AutoSize = true;
+            misc.DataBindings.Add(new Binding("Checked", sensorFlagsSource, "MiscEnabled", true));
+            misc.Location = new Point(3, 210);
+            misc.Name = "misc";
+            misc.Size = new Size(227, 17);
+            misc.TabIndex = 10;
+            misc.Text = "Misc (data sizes, network and storage info)";
+            misc.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Controls.Add(sensorGroupSelections, 0, 1);
+            tableLayoutPanel1.Controls.Add(label1, 0, 0);
+            tableLayoutPanel1.Controls.Add(sensorFilters, 1, 1);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Size = new Size(597, 353);
+            tableLayoutPanel1.TabIndex = 6;
+            // 
+            // label1
+            // 
+            label1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            label1.AutoSize = true;
+            label1.BorderStyle = BorderStyle.Fixed3D;
+            tableLayoutPanel1.SetColumnSpan(label1, 2);
+            label1.Location = new Point(3, 3);
+            label1.Margin = new Padding(3, 3, 0, 10);
+            label1.Name = "label1";
+            label1.Size = new Size(594, 41);
+            label1.TabIndex = 6;
+            label1.Text = "Select which hardware and sensor types to activate. What sensors are discovered will depend on the system hardware and whether it is supported by Libre Hardware Monitor.\r\n\r\n";
+            // 
+            // about
+            // 
+            about.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            about.Location = new Point(6, 0);
+            about.Name = "about";
+            about.Size = new Size(75, 23);
+            about.TabIndex = 3;
+            about.Text = "About...";
+            about.UseVisualStyleBackColor = true;
+            about.Click += About_Click;
+            // 
+            // panel1
+            // 
+            panel1.AutoSize = true;
+            panel1.Controls.Add(about);
+            panel1.Controls.Add(ok);
+            panel1.Controls.Add(cancel);
+            panel1.Dock = DockStyle.Bottom;
+            panel1.Location = new Point(0, 353);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(597, 26);
+            panel1.TabIndex = 7;
             // 
             // SetupDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(597, 379);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.panel1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "SetupDialog";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Libre Hardware Monitor Plug-in Setup";
-            this.sensorGroupSelections.ResumeLayout(false);
-            this.flowLayoutPanel3.ResumeLayout(false);
-            this.flowLayoutPanel3.PerformLayout();
-            this.sensorFilters.ResumeLayout(false);
-            this.flowLayoutPanel2.ResumeLayout(false);
-            this.flowLayoutPanel2.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(6F, 13F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(597, 379);
+            Controls.Add(tableLayoutPanel1);
+            Controls.Add(panel1);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "SetupDialog";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Libre Hardware Monitor Plug-in Setup";
+            sensorGroupSelections.ResumeLayout(false);
+            flowLayoutPanel3.ResumeLayout(false);
+            flowLayoutPanel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)hardwareFlagsSource).EndInit();
+            sensorFilters.ResumeLayout(false);
+            flowLayoutPanel2.ResumeLayout(false);
+            flowLayoutPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)sensorFlagsSource).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            panel1.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -503,5 +480,7 @@ namespace LibreHardwareMonitorAfterburnerPlugin
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.CheckBox battery;
         private System.Windows.Forms.CheckBox psu;
+        private System.Windows.Forms.BindingSource hardwareFlagsSource;
+        private System.Windows.Forms.BindingSource sensorFlagsSource;
     }
 }
