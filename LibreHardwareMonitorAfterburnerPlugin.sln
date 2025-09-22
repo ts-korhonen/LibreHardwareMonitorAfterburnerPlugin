@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibreHardwareMonitorAfterburnerPlugin", "LibreHardwareMonitorAfterburnerPlugin.csproj", "{82AE6E42-1003-43C0-B340-6FFAB361EEDB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3F142FD1-6C9E-49AB-8009-16946937CA7A} = {3F142FD1-6C9E-49AB-8009-16946937CA7A}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DllExportPatcher", "DllExportPatcher.csproj", "{3F142FD1-6C9E-49AB-8009-16946937CA7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{82AE6E42-1003-43C0-B340-6FFAB361EEDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82AE6E42-1003-43C0-B340-6FFAB361EEDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82AE6E42-1003-43C0-B340-6FFAB361EEDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F142FD1-6C9E-49AB-8009-16946937CA7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F142FD1-6C9E-49AB-8009-16946937CA7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F142FD1-6C9E-49AB-8009-16946937CA7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F142FD1-6C9E-49AB-8009-16946937CA7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

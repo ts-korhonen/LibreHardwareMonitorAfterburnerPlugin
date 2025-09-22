@@ -1,0 +1,55 @@
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+
+  <PropertyGroup>
+    <ProjectGuid>{3F142FD1-6C9E-49AB-8009-16946937CA7A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+  </PropertyGroup>
+
+  <UsingTask
+    TaskName="DllExportPatcher"
+    TaskFactory="RoslynCodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <Task>
+      <Using Namespace="System.Xml.Linq" />
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+var path = @"packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets";
+
+var xml = XDocument.Load(path, LoadOptions.PreserveWhitespace);
+
+XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
+
+var task = xml.Root.Descendants(ns + "DllExportAppDomainIsolatedTask").First();
+
+if (task.Attribute("ContinueOnError") is null)
+{
+    Log.LogMessage(MessageImportance.High, $"Patching {path}");
+    
+    task.Add(new XAttribute("ContinueOnError","WarnAndContinue"));
+    
+    xml.Save(path);
+    
+    Log.LogMessage(MessageImportance.High, $"Patched.");
+}
+else
+{
+    Log.LogMessage(MessageImportance.High, $"{path} already patched.");
+}
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="Build">
+    <Exec Command="dotnet restore LibreHardwareMonitorAfterburnerPlugin.csproj" WorkingDirectory="$(SolutionDir)" />
+    <Exec Command=".\DllExport.bat -action Restore" WorkingDirectory="$(SolutionDir)" />
+    <DllExportPatcher />
+  </Target>
+
+  <Target Name="Rebuild" DependsOnTargets="Build" />
+  <Target Name="Clean" />
+
+</Project>
