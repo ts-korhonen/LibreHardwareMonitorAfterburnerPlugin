@@ -4,6 +4,16 @@ This is a monitoring plugin for [MSI Afterburner](https://www.msi.com/Landing/af
 
 You can use it to get motherboard temperatures, fan speeds, etc. that are not built-in to Afterburner and RTSS OSD without running external monitoring software.
 
+> [!IMPORTANT]
+> The current releases (0.6v and earlier) contain WinRing0 driver that have been flagged as a threat by Windows Defender (VulnerableDriver:WinNT/Winring0.G)
+> 
+> This means that upon starting Afterburner, the driver is removed by Windows Defender and thus can't be used to retreive data including but not limited to motherboard sensors - the very reason I started this project.
+>
+> There's a fix in the pre-release version of LHM library and I'm working towards integrating it.
+
+> [!CAUTION]
+> Disabling Windows Defender or any other antivirus suite to bypass the issue will put your device at risk and is not recommended!
+
 ## Requirements
 
 * MSI Afterburner (version 4.6.5 used in development)
