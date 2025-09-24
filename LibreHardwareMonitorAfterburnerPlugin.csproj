@@ -118,10 +118,10 @@
       <Version>3.0.41</Version>
     </PackageReference>
     <PackageReference Include="LibreHardwareMonitorLib">
-      <Version>0.9.4</Version>
+      <Version>0.9.5-pre464</Version>
     </PackageReference>
     <PackageReference Include="System.Management">
-      <Version>9.0.0</Version>
+      <Version>9.0.9</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
