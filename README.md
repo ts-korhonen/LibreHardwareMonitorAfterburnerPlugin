@@ -9,7 +9,7 @@ You can use it to get motherboard temperatures, fan speeds, etc. that are not bu
 > 
 > This means that upon starting Afterburner, the driver is removed by Windows Defender and thus can't be used to retreive data including but not limited to motherboard sensors - the very reason I started this project.
 >
-> There's a fix in the pre-release version of LHM library and I'm working towards integrating it.
+> There's a fix in the pre-release version of LHM library, but it doesn't currently work in x86 and is thus incompatible with Afterburner. A solution ia under work.
 
 > [!CAUTION]
 > Disabling Windows Defender or any other antivirus suite to bypass the issue will put your device at risk and is not recommended!
