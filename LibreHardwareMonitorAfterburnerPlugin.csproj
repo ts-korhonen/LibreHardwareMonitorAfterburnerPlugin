@@ -112,13 +112,13 @@
       <Version>1.7.4</Version>
     </PackageReference>
     <PackageReference Include="HidSharp">
-      <Version>2.1.0</Version>
+      <Version>2.6.2</Version>
     </PackageReference>
     <PackageReference Include="ilmerge">
       <Version>3.0.41</Version>
     </PackageReference>
     <PackageReference Include="LibreHardwareMonitorLib">
-      <Version>0.9.5-pre464</Version>
+      <Version>0.9.5-pre408aa50</Version>
     </PackageReference>
     <PackageReference Include="System.Management">
       <Version>9.0.9</Version>
