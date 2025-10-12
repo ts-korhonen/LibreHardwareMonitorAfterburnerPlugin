@@ -9,7 +9,7 @@ You can use it to get motherboard temperatures, fan speeds, etc. that are not bu
 > 
 > This means that upon starting Afterburner, the driver is removed by Windows Defender and thus can't be used to retreive data including but not limited to motherboard sensors - the very reason I started this project.
 >
-> It's recommended to use [pre-release v0.7](https://github.com/ts-korhonen/LibreHardwareMonitorAfterburnerPlugin/releases/tag/v0.7-pre1) instead of the latest release for now.
+> It's recommended to use [pre-release v0.7](https://github.com/ts-korhonen/LibreHardwareMonitorAfterburnerPlugin/releases/tag/v0.7-pre2) instead of the latest release for now.
 
 ## Requirements
 
