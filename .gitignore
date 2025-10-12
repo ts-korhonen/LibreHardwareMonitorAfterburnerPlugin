@@ -399,8 +399,5 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-# DllExport Nuget package creates this
-DllExport.bat
-
 # Debugger build
 [Bb]uild
