@@ -5,6 +5,7 @@
 using System.IO.Compression;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Microsoft.Win32;
 
 namespace LibreHardwareMonitorAfterburnerPlugin;
 
@@ -73,7 +74,7 @@ public static class Exports
         var hardwareFlags = settings.HardwareFlags.Clone();
         var sensorFlags = settings.SensorFlags.Clone();
 
-        var dlg = new SetupDialog(hardwareFlags, sensorFlags);
+        var dlg = new SetupDialog(hardwareFlags, sensorFlags, GetPawnIOVersion());
 
         if (dlg.ShowDialog() != DialogResult.OK)
             return false;
@@ -208,5 +209,23 @@ public static class Exports
             File.AppendAllText(Assembly.GetExecutingAssembly().Location + ".log", $"{DateTime.UtcNow:s}: {message}{Environment.NewLine}");
         }
         catch { /* Ignore; Let's not crash the host process. */ }
+    }
+
+    private static string? GetPawnIOVersion()
+    {
+        try
+        {
+            using var hive = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            using var key = hive.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\PawnIO");
+
+            if (key is not null && key.GetValue("DisplayVersion") is string version)
+                return version;
+        }
+        catch (Exception e)
+        {
+            Log(e);
+        }
+
+        return null;
     }
 }

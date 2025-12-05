@@ -57,6 +57,7 @@
             flow = new CheckBox();
             misc = new CheckBox();
             tableLayoutPanel1 = new TableLayoutPanel();
+            pawnIoStatus = new LinkLabel();
             label1 = new Label();
             about = new Button();
             panel1 = new Panel();
@@ -373,19 +374,34 @@
             tableLayoutPanel1.ColumnCount = 2;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Controls.Add(sensorGroupSelections, 0, 1);
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
-            tableLayoutPanel1.Controls.Add(sensorFilters, 1, 1);
+            tableLayoutPanel1.Controls.Add(pawnIoStatus, 0, 1);
+            tableLayoutPanel1.Controls.Add(sensorGroupSelections, 0, 2);
+            tableLayoutPanel1.Controls.Add(sensorFilters, 1, 2);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Size = new Size(597, 353);
             tableLayoutPanel1.TabIndex = 6;
             // 
+            // pawnIoStatus
+            //
+            pawnIoStatus.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            pawnIoStatus.AutoSize = true;
+            tableLayoutPanel1.SetColumnSpan(pawnIoStatus, 2);
+            pawnIoStatus.Location = new Point(3, 57);
+            pawnIoStatus.Margin = new Padding(3, 3, 0, 10);
+            pawnIoStatus.Name = "pawnIoStatus";
+            pawnIoStatus.Size = new Size(594, 13);
+            pawnIoStatus.TabIndex = 12;
+            pawnIoStatus.TabStop = true;
+            pawnIoStatus.Text = "PawnIO Status";
+            pawnIoStatus.TextAlign = ContentAlignment.MiddleLeft;
+            //
             // label1
             // 
             label1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -482,5 +498,6 @@
         private System.Windows.Forms.CheckBox psu;
         private System.Windows.Forms.BindingSource hardwareFlagsSource;
         private System.Windows.Forms.BindingSource sensorFlagsSource;
+        private System.Windows.Forms.LinkLabel pawnIoStatus;
     }
 }
