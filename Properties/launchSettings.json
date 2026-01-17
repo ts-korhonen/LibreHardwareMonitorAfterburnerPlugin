@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Launch Debugger App": {
+      "commandName": "Executable",
+      "executablePath": "$(SolutionDir)/Debugger/bin/Debugger.exe", // see: ../Debugger/Readme.md
+      "commandLineArgs": "$(TargetPath)",
+      "workingDirectory": "$(TargetDir)",
+      "nativeDebugging": true
+    }
+  }
+}
