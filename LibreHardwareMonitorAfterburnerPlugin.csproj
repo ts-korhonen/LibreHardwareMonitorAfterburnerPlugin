@@ -36,8 +36,8 @@
   <ItemGroup>
     <PackageReference Include="PolySharp" Version="1.15.0" />
     <PackageReference Include="DllExport" Version="1.8.0" PrivateAssets="true" />
-    <PackageReference Include="HidSharp" Version="2.6.3" />
-    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.5-pre503" />
+    <PackageReference Include="HidSharp" Version="2.6.4" />
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.5" />
     <PackageReference Include="System.Memory" Version="4.6.3" />
   </ItemGroup>
 
