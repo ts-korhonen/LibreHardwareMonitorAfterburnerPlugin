@@ -31,7 +31,8 @@ jobs:
       - name: Create Release Draft
         uses: softprops/action-gh-release@v2
         with:
-          files: bin/Release/net48/win-x86/LibreHardwareMonitorAfterburnerPlugin.dll
+          files: bin/Release/net48/win-x86/LibreHardwareMonitor.dll
           draft: true
           prerelease: ${{ contains(github.ref_name, '-') }}
           generate_release_notes: true
+          fail_on_unmatched_files: true
