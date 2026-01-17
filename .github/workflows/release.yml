@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Extract Version
+        run: |
+          $ver = $env:GITHUB_REF_NAME.TrimStart("v")
+          Add-Content $env:GITHUB_ENV "VERSION=$ver"          
+          Add-Content $env:GITHUB_STEP_SUMMARY "### Version: $ver"
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore
+        run: msbuild LibreHardwareMonitorAfterburnerPlugin.csproj -t:Restore -p:Configuration=Release
+
+      - name: Build
+        run: msbuild LibreHardwareMonitorAfterburnerPlugin.csproj -t:Build -p:Configuration=Release -p:Version=$env:VERSION
+
+      - name: Create Release Draft
+        uses: softprops/action-gh-release@v2
+        with:
+          files: bin/Release/net48/win-x86/LibreHardwareMonitorAfterburnerPlugin.dll
+          draft: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          generate_release_notes: true
