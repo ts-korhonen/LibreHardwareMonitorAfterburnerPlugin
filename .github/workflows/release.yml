@@ -1,4 +1,5 @@
 name: Release
+run-name: ${{ format('{0} {1}', (contains(github.ref_name, '-') && 'Pre-release' || 'Release'), github.ref_name) }}
 
 on:
   push:
@@ -31,7 +32,7 @@ jobs:
       - name: Create Release Draft
         uses: softprops/action-gh-release@v2
         with:
-          name: ${{ format('{0} {1}', (contains(github.ref_name, '-') && 'Pre-release' || 'Release'), github.ref_name) }}
+          name: ${{ github.run_name }}
           files: bin/Release/net48/win-x86/LibreHardwareMonitor.dll
           draft: true
           prerelease: ${{ contains(github.ref_name, '-') }}
