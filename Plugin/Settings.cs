@@ -90,6 +90,9 @@ public class Settings
             "MSIAfterburner"
         );
 
+        if (!Directory.Exists(root))
+            return null;
+
         // Find all user.config files, sort by Afterburner version to try the latest first
         var files = Directory.EnumerateFiles(root, "user.config", SearchOption.AllDirectories)
             .OrderByDescending(x => Path.GetDirectoryName(x)?
