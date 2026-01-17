@@ -4,17 +4,11 @@ This is a monitoring plugin for [MSI Afterburner](https://www.msi.com/Landing/af
 
 You can use it to get motherboard temperatures, fan speeds, etc. that are not built-in to Afterburner and RTSS OSD without running external monitoring software.
 
-> [!IMPORTANT]
-> The current releases (0.6v and earlier) contain WinRing0 driver that have been flagged as a threat by Windows Defender (VulnerableDriver:WinNT/Winring0.G)
-> 
-> This means that upon starting Afterburner, the driver is removed by Windows Defender and thus can't be used to retreive data including but not limited to motherboard sensors - the very reason I started this project.
->
-> It's recommended to use [pre-release v0.7](https://github.com/ts-korhonen/LibreHardwareMonitorAfterburnerPlugin/releases/tag/v0.7-pre2) instead of the latest release for now.
-
 ## Requirements
 
-* MSI Afterburner (version 4.6.5 used in development)
+* [MSI Afterburner](https://www.msi.com/Landing/afterburner) (version 4.6.6 used in development)
 * .Net Framework >= 4.8
+* [PawnIO universal kernel driver](https://pawnio.eu/) (technically optional, but required for many sensors)
 
 ## Installing
 
