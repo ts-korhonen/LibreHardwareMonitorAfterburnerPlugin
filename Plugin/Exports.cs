@@ -47,6 +47,8 @@ public static class Exports
     {
         AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolver;
 
+        SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+
         try
         { 
             settings = Settings.Load(settings_path);
@@ -182,6 +184,29 @@ public static class Exports
         Log($"Couldn't resolve `{args.Name}` for `{args.RequestingAssembly}`");
 
         return null;
+    }
+
+    /// <summary>
+    ///     Reload sensor source on resume from suspended power state.
+    /// </summary>
+    /// <remarks>
+    ///     Some sensors need reinitialization after resume to work properly.
+    /// </remarks>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private static void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+    {
+        if (e.Mode != PowerModes.Resume)
+            return;
+
+        try
+        {
+            source.Value.Reload(settings);
+        }
+        catch (Exception ex)
+        {
+            Log(ex);
+        }
     }
 
     /// <summary>

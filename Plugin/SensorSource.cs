@@ -23,6 +23,8 @@ internal class SensorSource
     /// </summary>
     private readonly Dictionary<IHardware, int> _lastUpdate = [];
 
+    private readonly object _lock = new();
+
     public SensorSource(Settings settings)
     {
         InitializeGroups(settings.HardwareFlags);
@@ -34,15 +36,19 @@ internal class SensorSource
 
     public void Reload(Settings settings)
     {
-        _sensors.Clear();
+        lock (_lock)
+        {
 
-        _lastUpdate.Clear();
+            _sensors.Clear();
 
-        InitializeGroups(settings.HardwareFlags);
+            _lastUpdate.Clear();
 
-        _computer.Reset();
+            InitializeGroups(settings.HardwareFlags);
 
-        Initialize(settings.SensorFlags);
+            _computer.Reset();
+
+            Initialize(settings.SensorFlags);
+        }
     }
 
     private void InitializeGroups(HardwareFlags hwFlags)
