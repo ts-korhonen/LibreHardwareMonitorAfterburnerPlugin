@@ -47,7 +47,15 @@ public static class Exports
     {
         AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolver;
 
-        settings = Settings.Load(settings_path);
+        try
+        { 
+            settings = Settings.Load(settings_path);
+        }
+        catch (Exception e)
+        {
+            Log(e);
+            settings = new();
+        }
 
         source = new(() => new SensorSource(settings));
     }
