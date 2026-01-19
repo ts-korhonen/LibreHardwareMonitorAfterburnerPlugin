@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="icon.ico" />
+    <None Include=".github\**" />
   </ItemGroup>
 
   <ItemGroup>
