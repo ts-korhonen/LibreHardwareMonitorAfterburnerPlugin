@@ -9,6 +9,7 @@ You can use it to get motherboard temperatures, fan speeds, etc. that are not bu
 * [MSI Afterburner](https://www.msi.com/Landing/afterburner) (version 4.6.6 used in development)
 * .Net Framework >= 4.8
 * [PawnIO universal kernel driver](https://pawnio.eu/) (technically optional, but required for many sensors)
+  * Note: the latest version 2.1.0.0 isn't compatible with releases prior to v0.8.0
 
 ## Installing
 
