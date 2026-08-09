@@ -235,7 +235,7 @@ public static class Exports
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="message"></param>
-    private static void Log<T>(T message)
+    internal static void Log<T>(T message)
     {
         try
         {

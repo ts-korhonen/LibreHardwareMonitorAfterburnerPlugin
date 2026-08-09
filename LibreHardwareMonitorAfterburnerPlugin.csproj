@@ -31,6 +31,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="icon.ico" />
+    <EmbeddedResource Include="Resources\Nvidia.bin" LogicalName="LibreHardwareMonitorAfterburnerPlugin.Nvidia.bin" />
+    <None Include="Resources\PawnIO-COPYING.txt" />
     <None Include=".github\**" />
   </ItemGroup>
 

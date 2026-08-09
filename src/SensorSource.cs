@@ -19,11 +19,18 @@ internal class SensorSource
     private readonly List<ISensor> _sensors = [];
 
     /// <summary>
+    /// Additional sensors created by the plugin itself (e.g. NVIDIA Blackwell hotspot).
+    /// </summary>
+    private readonly List<ExternalSensor> _externalSensors = [];
+
+    /// <summary>
     /// Keeps record of hardware update times
     /// </summary>
     private readonly Dictionary<IHardware, int> _lastUpdate = [];
 
     private readonly object _lock = new();
+
+    private NvidiaHotspotReader? _hotspotReader;
 
     public SensorSource(Settings settings)
     {
@@ -32,6 +39,8 @@ internal class SensorSource
         _computer.Open();
 
         Initialize(settings.SensorFlags);
+
+        InitializeNvidiaHotspot(settings);
     }
 
     public void Reload(Settings settings)
@@ -43,12 +52,90 @@ internal class SensorSource
 
             _lastUpdate.Clear();
 
+            _externalSensors.Clear();
+
+            _hotspotReader?.Dispose();
+            _hotspotReader = null;
+
             InitializeGroups(settings.HardwareFlags);
 
             _computer.Reset();
 
             Initialize(settings.SensorFlags);
+
+            InitializeNvidiaHotspot(settings);
         }
+    }
+
+    /// <summary>
+    ///     Adds sensors for the hidden thermal channels of NVIDIA RTX 50 (Blackwell) GPUs.
+    /// </summary>
+    /// <remarks>
+    ///     Only active when the PawnIO kernel driver is installed and an RTX 50 GPU is
+    ///     present. On any failure the plugin keeps working exactly as before.
+    /// </remarks>
+    private void InitializeNvidiaHotspot(Settings settings)
+    {
+        // The Hot Spot sensors are temperature sensors of the GPU hardware group, so
+        // they follow the same "Active hardware groups" / "Active sensor types"
+        // selection as the LibreHardwareMonitor sensors.
+        if (!settings.HardwareFlags.GpuEnabled || !settings.SensorFlags.TemperatureEnabled)
+            return;
+
+        try
+        {
+            var reader = new NvidiaHotspotReader();
+
+            if (!reader.Available)
+            {
+                reader.Dispose();
+                return;
+            }
+
+            bool multiple = reader.GpuCount > 1;
+
+            // When LibreHardwareMonitor already provides a "GPU Hot Spot" sensor
+            // (older NVIDIA GPUs or AMD GPUs), use a distinct name for the Blackwell
+            // one to avoid duplicate source names inside MSI Afterburner.
+            bool hasLhmHotSpot = _sensors.Any(sensor => sensor.Name == "GPU Hot Spot");
+
+            for (int gpu = 0; gpu < reader.GpuCount; gpu++)
+                AddBlackwellGpuSensors(reader, gpu, multiple, hasLhmHotSpot);
+
+            _hotspotReader = reader;
+        }
+        catch
+        {
+            // Blackwell hotspot support is best effort. Any failure is ignored so the
+            // rest of the plugin keeps working.
+        }
+    }
+
+    /// <summary>
+    ///     Adds the Hot Spot and per-channel sensors for one Blackwell GPU.
+    /// </summary>
+    private void AddBlackwellGpuSensors(NvidiaHotspotReader reader, int gpuIndex, bool multiple, bool hasLhmHotSpot)
+    {
+        string prefix = multiple ? $"GPU{gpuIndex + 1} " : "";
+
+        // Maximum of all valid channels, i.e. the Hot Spot temperature reported by
+        // HWMonitor 1.65.1 and later.
+        _externalSensors.Add(new ExternalSensor(prefix + (hasLhmHotSpot ? "GPU Hot Spot (Blackwell)" : "GPU Hot Spot"), () => GetChannels(reader, gpuIndex).Max()));
+
+        // Individual thermal channels, named like HWMonitor's "Channel #N".
+        for (int channel = 0; channel < NvidiaHotspotReader.ChannelCount; channel++)
+            AddChannelSensor(reader, gpuIndex, channel, prefix);
+    }
+
+    private void AddChannelSensor(NvidiaHotspotReader reader, int gpuIndex, int channel, string prefix)
+    {
+        _externalSensors.Add(new ExternalSensor($"{prefix}GPU Hot Spot Channel #{channel + 1}", () => GetChannels(reader, gpuIndex)[channel]));
+    }
+
+    private static float?[] GetChannels(NvidiaHotspotReader reader, int gpuIndex)
+    {
+        reader.TryReadChannels(gpuIndex, out float?[] channels);
+        return channels;
     }
 
     private void InitializeGroups(HardwareFlags hwFlags)
@@ -145,14 +232,14 @@ internal class SensorSource
         }
     }
 
-    public int SensorCount => _sensors.Count;
+    public int SensorCount => _sensors.Count + _externalSensors.Count;
 
     public float SensorValue(int index)
     {
         var sensor = _sensors.ElementAtOrDefault(index);
 
         if (sensor == null)
-            return 0f;
+            return _externalSensors.ElementAtOrDefault(index - _sensors.Count)?.GetValue() ?? 0f;
 
         // Update sensors hardware if last update was over 100ms ago.
         // This most likely results in one update per hardware in a polling cycle as long as polling interval is greater.
@@ -171,7 +258,7 @@ internal class SensorSource
         var sensor = _sensors.ElementAtOrDefault(index);
 
         if (sensor == null)
-            return false;
+            return FillExternalDescription(index - _sensors.Count, desc);
 
         desc.szName = sensor.Name;
 
@@ -188,6 +275,38 @@ internal class SensorSource
         desc.fltMaxLimit = GetSensorMaxLimit(sensor.SensorType);
 
         desc.szFormat = GetSensorFormat(sensor.SensorType);
+
+        return true;
+    }
+
+    /// <summary>
+    ///     Fills the descriptor for a sensor created by the plugin itself
+    ///     (e.g. the NVIDIA Blackwell Hot Spot sensors).
+    /// </summary>
+    private bool FillExternalDescription(int externalIndex, MonitoringSourceDesc desc)
+    {
+        var external = _externalSensors.ElementAtOrDefault(externalIndex);
+
+        if (external == null)
+            return false;
+
+        desc.szName = external.Name;
+
+        desc.szUnits = "°C";
+
+        desc.szGroup = "LibreHardwareMonitor";
+
+        // These are GPU sensors even though they are created by the plugin itself.
+        desc.dwID = GetSensorPluginID(HardwareType.GpuNvidia);
+
+        desc.dwInstance = 0;
+
+        desc.fltMinLimit = 0f;
+
+        // Blackwell thermal samples are validated up to 130 °C.
+        desc.fltMaxLimit = 130f;
+
+        desc.szFormat = "%.1f";
 
         return true;
     }
@@ -255,4 +374,20 @@ internal class SensorSource
             or SensorType.Energy => "%.0f",
         _ => "%.1f",
     };
+
+    /// <summary>
+    ///     A sensor that is created by the plugin itself instead of LibreHardwareMonitor.
+    /// </summary>
+    private sealed class ExternalSensor
+    {
+        public ExternalSensor(string name, Func<float?> getValue)
+        {
+            Name = name;
+            GetValue = getValue;
+        }
+
+        public string Name { get; }
+
+        public Func<float?> GetValue { get; }
+    }
 }
