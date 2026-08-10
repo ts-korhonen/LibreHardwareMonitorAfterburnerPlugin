@@ -21,7 +21,7 @@ jobs:
           Add-Content $env:GITHUB_STEP_SUMMARY "### Version: $ver"
 
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v3
 
       - name: Restore
         run: msbuild LibreHardwareMonitorAfterburnerPlugin.csproj -t:Restore -p:Configuration=Release
