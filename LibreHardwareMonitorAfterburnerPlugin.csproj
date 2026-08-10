@@ -44,7 +44,12 @@
 
   <Import Project="compress_deps.targets" />
   <Target Name="EmbedDependencies" AfterTargets="ResolveReferences">
-    <CompressFile DependencyFiles="@(ReferenceCopyLocalPaths)">
+    <ItemGroup>
+      <FilteredDependencyFiles
+        Include="@(ReferenceCopyLocalPaths)"
+        Condition="'%(ReferenceCopyLocalPaths.Culture)' == ''" />
+    </ItemGroup>
+    <CompressFile DependencyFiles="@(FilteredDependencyFiles)">
       <Output TaskParameter="CompressedFiles" ItemName="CompressedFiles" />
     </CompressFile>
     <ItemGroup>
