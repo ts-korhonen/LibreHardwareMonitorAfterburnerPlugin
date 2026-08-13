@@ -5,14 +5,23 @@
 #define NOMINMAX
 
 #include <windows.h>
-#include <stdlib.h>
-#include <conio.h>
 
+#include <atomic>
 #include <bit>
+#include <chrono>
+#include <cstdio>
+#include <format>
 #include <iostream>
-#include <charconv>
+#include <memory>
+#include <ostream>
+#include <stop_token>
 #include <string>
+#include <string_view>
 #include <thread>
+#include <type_traits>
+#include <vector>
+
+#include "cpptui.hpp"
 
 #include "MSIAfterburnerMonitoringSourceDesc.h"
 
@@ -21,111 +30,194 @@ typedef DWORD(__cdecl* pGetSourcesNum)();
 typedef bool(__cdecl* pGetSourceDesc)(DWORD dwIndex, LPMONITORING_SOURCE_DESC pDesc);
 typedef float(__cdecl* pGetSourceData)(DWORD dwIndex);
 
-static HANDLE menu_event = nullptr;
+struct Context {
+    HMODULE library;
+    cpptui::App& app;
+    std::shared_ptr<cpptui::TableScrollable> table;
+    std::shared_ptr<cpptui::StatusBar> status;
+};
 
-int main(int argc, const char* argv[])
-{
-    if (argc != 2)
+void loop(std::stop_token stop, Context&& ctx);
+std::string fix_degree_symbol(std::string_view input);
+
+int main(int argc, const char* argv[]) {
+    if (argc != 2) {
+        std::cout << "Provide path to plugin library." << std::endl;
         return -1;
-
-    std::ios_base::sync_with_stdio(false);
-
-    menu_event = CreateEvent(nullptr, TRUE, FALSE, TEXT("LHMAP_DEBUGGER_MENU_EVENT"));
-
-    if (menu_event == nullptr)
-        return -1;
+    }
 
     auto library = LoadLibrary(TEXT(argv[1]));
 
-    if (library == nullptr)
+    if (library == nullptr) {
+        std::cout << "Loading plugin library failed." << std::endl;
         return -1;
+    }
 
     auto SetupSource = std::bit_cast<pSetupSource>(GetProcAddress(library, "SetupSource"));
-    auto GetSourcesNum = std::bit_cast<pGetSourcesNum>(GetProcAddress(library, "GetSourcesNum"));
-    auto GetSourceDesc = std::bit_cast<pGetSourceDesc>(GetProcAddress(library, "GetSourceDesc"));
-    auto GetSourceData = std::bit_cast<pGetSourceData>(GetProcAddress(library, "GetSourceData"));
 
-    bool run = true;
+    using namespace cpptui;
 
-    std::thread keyb([&run]() {
+    App app;
 
-        while (run)
-        {
-            if (_kbhit())
-                SetEvent(menu_event);
-        }
+    Theme::set_theme(Theme::Dark());
+
+    auto root = std::make_shared<Vertical>();
+
+    auto content = std::make_shared<Border>(BorderStyle::Rounded);
+    content->set_title("Sensor data");
+    root->add(content);
+
+    auto table = std::make_shared<TableScrollable>();
+    table->focusable = false;
+    table->columns = {"#", "Name", "Formatted", "Raw value"};
+    content->add(table);
+
+    auto footer = std::make_shared<Horizontal>();
+    footer->auto_shrink = true;
+    root->add(footer);
+
+    auto shortcuts = std::make_shared<ShortcutBar>();
+    shortcuts->add("Q","Quit");
+    shortcuts->add("S","Setup");
+    shortcuts->add("Ctrl+S","Setup selected source");
+    footer->add(shortcuts);
+
+    auto status = std::make_shared<StatusBar>();
+    status->add_section("");
+    status->add_section("");
+    footer->add(status);
+
+    table->on_change = [&](int i){
+        status->sections[1].styled_content =
+            StyledText().colored_bold(
+                std::format("Selected: {}", i), Theme::current().primary);
+    };
+
+    app.register_exit_key('q');
+
+    app.register_key('s', [&]() {
+        SetupSource(0xFFFFFFFF, HWND(-1));
     });
 
-    while (run)
-    {
-        auto sNum = GetSourcesNum();
+    app.register_key('s', [&](){
+        SetupSource(table->selected_index, HWND(-1));
+    }, true);
 
-        system("cls");
+    Context ctx = {
+        library,
+        app,
+        table,
+        status
+    };
 
-        std::cout << sNum << " sources.\n\n";
+    auto loop_thread = std::jthread(loop, std::move(ctx));
 
-        for (DWORD idx = 0; idx < sNum; idx++)
-        {
-            MONITORING_SOURCE_DESC desc;
-            if (GetSourceDesc(idx, &desc))
-            {
-                float data = GetSourceData(idx);
+    app.run(root);
 
-                std::cout << desc.szName << ": " << data << "\n";
-            }
-            else
-            {
-                std::cout << "Error on index " << idx << "\n\n";
-            }
-        }
-
-        std::cout << "\n\ns   - setup\n";
-        std::cout << "s## - setup source ##\n";
-        std::cout << "q   - quit\n\n";
-        std::cout << "> ";
-
-        auto menu_result = WaitForSingleObject(menu_event, 1000);
-
-        if (menu_result == WAIT_OBJECT_0)
-        {
-            std::string input;
-
-            std::getline(std::cin, input);
-
-            if (input.length() > 0)
-            {
-                switch (input[0])
-                {
-                case 's':
-                case 'S':
-                    if (input.length() > 1)
-                    {
-                        DWORD idx{};
-                        auto [ptr, ec] = std::from_chars(input.data() + 1, input.data() + input.size(), idx);
-                        if (ec == std::errc())
-                        {
-                            SetupSource(idx, HWND(-1));
-                        }
-                    }
-                    else
-                        SetupSource(0xFFFFFFFF, HWND(-1));
-                    break;
-                case 'q':
-                case 'Q':
-                    run = false;
-                    break;
-                default:
-                    break;
-                }
-            }
-
-            ResetEvent(menu_event);
-        }
-    }
+    loop_thread.request_stop();
+    loop_thread.join();
 
     FreeLibrary(library);
 
-    CloseHandle(menu_event);
+    return 0;
+}
 
-    keyb.join();
+void loop(std::stop_token stop, Context&& ctx) {
+
+    std::atomic_flag update_guard {};
+
+    auto GetSourcesNum = std::bit_cast<pGetSourcesNum>(GetProcAddress(ctx.library, "GetSourcesNum"));
+    auto GetSourceDesc = std::bit_cast<pGetSourceDesc>(GetProcAddress(ctx.library, "GetSourceDesc"));
+    auto GetSourceData = std::bit_cast<pGetSourceData>(GetProcAddress(ctx.library, "GetSourceData"));
+
+    while (!stop.stop_requested()) {
+        using std::operator""ms;
+        auto loop_start = std::chrono::steady_clock::now();
+
+        auto sNum = GetSourcesNum();
+
+        std::vector<std::vector<cpptui::StyledText>> sensors;
+
+        for (DWORD idx = 0; idx < sNum; idx++) {
+            using namespace cpptui;
+
+            MONITORING_SOURCE_DESC desc;
+            if (GetSourceDesc(idx, &desc)) {
+                float data = GetSourceData(idx);
+
+                int size = std::snprintf(nullptr, 0, desc.szFormat, data);
+                std::string fmt_data(size, '\0');
+                std::snprintf(fmt_data.data(), size+1, desc.szFormat, data);
+
+                auto& row = sensors.emplace_back();
+
+                row.emplace_back().colored(
+                    std::to_string(idx),
+                    Theme::current().success);
+                row.emplace_back().colored(
+                    desc.szName,
+                    Theme::current().primary);
+                row.emplace_back().colored(
+                    std::format("{} {}",fmt_data, fix_degree_symbol(desc.szUnits)),
+                    Theme::current().secondary);
+                row.emplace_back().colored(
+                    std::to_string(data),
+                    Theme::current().warning);
+            }
+            else {
+                // Error
+                auto& row = sensors.emplace_back();
+                row.emplace_back().colored(
+                    std::format("{} error!", idx),
+                    Theme::current().error);
+                row.resize(4, StyledText().colored(
+                    "---",
+                    Theme::current().error));
+            }
+        }
+
+        if (!update_guard.test_and_set()) {
+            ctx.app.post([&ctx, &update_guard, sNum, new_rows=std::move(sensors)]() mutable {
+                using namespace cpptui;
+
+                if (sNum > 0) {
+                    ctx.status->sections[0].styled_content =
+                        StyledText().colored_bold(std::format("Sensors: {}", sNum),
+                            Theme::current().primary);
+
+                    ctx.status->sections[1].styled_content =
+                        StyledText().colored_bold(
+                            std::format("Selected: {}", ctx.table->selected_index),
+                                Theme::current().primary);
+                }
+                else {
+                    ctx.status->sections[0].styled_content = "No sensors";
+                    ctx.status->sections[1].styled_content = "";
+                }
+
+                ctx.table->rows = std::move(new_rows);
+                ctx.table->col_widths = { 6, ctx.table->width-41, 15, 20 };
+                update_guard.clear();
+            });
+        }
+
+        std::this_thread::sleep_until(loop_start + 1000ms);
+    }
+}
+
+/** Convert CP-1252 degree character to UTF-8 symbol */
+std::string fix_degree_symbol(std::string_view input) {
+    std::string result;
+    result.reserve(input.size() + 4);
+
+    for (char c : input) {
+        if (static_cast<unsigned char>(c) == 0xB0) {
+            result += "\xC2\xB0";
+        }
+        else {
+            result += c;
+        }
+    }
+
+    return result;
 }
